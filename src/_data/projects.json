@@ -1,37 +1,266 @@
 [
   {
-    "title": "Cloud-Native Microservices Migration",
-    "description": "Led the architecture and implementation of migrating a large-scale monolithic Java EE application to a cloud-native microservices architecture on AWS. Designed service boundaries, set up CI/CD pipelines, and established DevOps practices across a team of 12 developers.",
-    "technologies": ["Java 17", "Spring Boot", "Kubernetes", "AWS EKS", "Terraform", "GitHub Actions"],
-    "status": "completed",
-    "period": "2022 – 2023"
+    "title": "Vehicle Diagnostic Application for High-Voltage Battery Assessment",
+    "description": "Development of a vehicle diagnostic application for assessing high-voltage batteries in electric vehicles.",
+    "industry": "Automotive",
+    "technologies": ["Java", "Kotlin", "Spring Boot", "Micronaut", "ActiveMQ"],
+    "role": "Backend Developer",
+    "period": "November 2023 – June 2025"
   },
   {
-    "title": "IoT Data Platform",
-    "description": "Designed and implemented a high-throughput IoT data ingestion and processing platform handling millions of sensor messages per day. Integrated MQTT brokers, stream processing, and a time-series database backend.",
-    "technologies": ["Java", "Micronaut", "MQTT", "Apache Kafka", "InfluxDB", "Docker"],
-    "status": "completed",
-    "period": "2021 – 2022"
+    "title": "Patient and Blood Data Management Application",
+    "description": "Implementation of an application for managing patients and blood data for algorithms determining various disease risks.",
+    "industry": "Medical Technology",
+    "technologies": ["Java", "Spring Boot", "Spring MVC", "Spring Data", "JavaScript", "React"],
+    "role": "Backend Developer, System Architect",
+    "period": "October 2020 – July 2021"
   },
   {
-    "title": "Enterprise DevOps Transformation",
-    "description": "Consulted a large enterprise in adopting DevOps practices and modernizing their delivery pipeline. Introduced container-based deployments, automated testing gates, and SCRUM-based processes.",
-    "technologies": ["Jenkins", "Docker", "Ansible", "Maven", "SonarQube", "JIRA"],
-    "status": "completed",
-    "period": "2020 – 2021"
+    "title": "Vehicle Diagnostic Application for Experts and Inspection Organizations",
+    "description": "Further development of a vehicle diagnostic application for experts and inspection organizations. Renewal of the technology stack and transformation.",
+    "industry": "Automotive",
+    "technologies": ["Java", "React"],
+    "role": "Full-Stack Developer, System Architect",
+    "period": "March 2020 – October 2023"
   },
   {
-    "title": "OSGi Desktop Application Modernization",
-    "description": "Modernized a legacy OSGi-based desktop application used in industrial environments, introducing automated UI testing, refactoring the plugin architecture, and preparing the codebase for a cloud-connected future.",
-    "technologies": ["Java", "OSGi", "Eclipse RCP", "JUnit", "Maven"],
-    "status": "completed",
-    "period": "2019 – 2020"
+    "title": "Emergency Management Application for Emergency Call Centers",
+    "description": "Implementation of an application for emergency management in emergency call centers.",
+    "industry": "Medical Technology",
+    "technologies": ["Java", "Spring Boot", "Spring MVC", "Spring Data", "JavaScript", "React"],
+    "role": "Backend Developer, System Architect",
+    "period": "April 2019 – present"
   },
   {
-    "title": "Kubernetes-Based SaaS Platform",
-    "description": "Ongoing engagement architecting and evolving a multi-tenant SaaS platform running on Kubernetes. Responsibilities include Helm chart development, observability setup, and performance optimization.",
-    "technologies": ["Java", "Spring Boot", "Kubernetes", "Helm", "Prometheus", "Grafana"],
-    "status": "ongoing",
-    "period": "2024 – present"
+    "title": "New Diagnostic Software Platform",
+    "description": "Development of a new diagnostic software platform.",
+    "industry": "Automotive",
+    "technologies": ["Java", "Spring Boot", "React", "Node.js", "Electron", "TypeScript", "EMF", "Xtext", "Eclipse RCP"],
+    "role": "Full-Stack Developer, System Architect",
+    "period": "December 2016 – February 2020"
+  },
+  {
+    "title": "Vehicle Diagnostic Content Management in AUTOSAR",
+    "description": "Further development of applications for managing vehicle diagnostic content in AUTOSAR.",
+    "industry": "Automotive",
+    "technologies": ["Java", "JavaFX"],
+    "role": "Full-Stack Developer",
+    "period": "April 2019 – December 2019"
+  },
+  {
+    "title": "Diagnostic Software Platform Development",
+    "description": "Development of a new diagnostic software platform.",
+    "industry": "Automotive",
+    "technologies": ["Java", "EMF", "Xtext", "JavaScript", "jQuery", "HTML"],
+    "role": "Full-Stack Developer, System Architect",
+    "period": "October 2014 – December 2016"
+  },
+  {
+    "title": "Application Framework for System Integration",
+    "description": "Development of an application framework for integrating various systems (vehicle diagnostics, guided troubleshooting, CMS, 3D navigation, etc.) and their semantic linking/embedding.",
+    "industry": "Automotive",
+    "technologies": ["Java", "EMF", "OSGi"],
+    "role": "System Architect",
+    "period": "April 2014 – September 2014"
+  },
+  {
+    "title": "Vehicle Data Information System",
+    "description": "Development of a web application as an information system for vehicle data (repair instructions, wiring diagrams, etc.).",
+    "industry": "Automotive",
+    "technologies": ["JEE", "Java", "EMF", "Spring", "JavaScript", "jQuery", "HTML"],
+    "role": "Developer, System Architect",
+    "period": "July 2013 – November 2013"
+  },
+  {
+    "title": "Software Internationalization Components",
+    "description": "Development of components for software internationalization.",
+    "industry": "Automotive",
+    "technologies": ["Java", "EMF", "Apache Lucene", "MSSQL"],
+    "role": "Full-Stack Developer",
+    "period": "January 2012 – July 2013"
+  },
+  {
+    "title": "IDE for Formal Vehicle Communication Description",
+    "description": "Development of an IDE for formal description of vehicle communication (based on ODX) and offboard test processes (based on OTX).",
+    "industry": "Automotive",
+    "technologies": ["Xtext", "Eclipse"],
+    "role": "Full-Stack Developer",
+    "period": "September 2011 – December 2016"
+  },
+  {
+    "title": "Vehicle Diagnostic Device Communication Application",
+    "description": "OSGi application for communication with vehicle diagnostic devices. Tooling environment for DSL-based creation of communication functions.",
+    "industry": "Automotive",
+    "technologies": ["Java", "OSGi", "SWT", "HTML", "jQuery", "EMF", "Xtext", "Xtend", "Xpand"],
+    "role": "Full-Stack Developer, System Architect",
+    "period": "May 2011 – present"
+  },
+  {
+    "title": "MDA with Eclipse Training",
+    "description": "Training on Model Driven Architecture with Eclipse. Introduction to Model Driven Software Development techniques based on Eclipse. Training on Eclipse MDA tools: EMF, Xpand, Xtend, Xtext, MWE. Support in abstracting company-internal models.",
+    "industry": "Information Technology",
+    "technologies": ["EMF", "Xpand", "Xtend", "Xtext", "MWE"],
+    "role": "Coach",
+    "period": "May 2011"
+  },
+  {
+    "title": "Eclipse Plugins for BPM-Based Software Generation",
+    "description": "Eclipse plugins for software generation based on BPM processes. Integration into JDT, adaptation of Groovy. MDSD generation approach for exporting plugin artifacts.",
+    "industry": "Telecommunications",
+    "technologies": ["Java", "Platform API", "JDT", "GroovyEclipse", "EMF", "Xpand", "SWT/JFace"],
+    "role": "Full-Stack Developer",
+    "period": "November 2010 – March 2011"
+  },
+  {
+    "title": "Seminar Management System Database Layer",
+    "description": "Implementation of the database layer for a seminar management system. Generation of DAO and service layers with EMF and Xpand.",
+    "industry": "IT Systems",
+    "technologies": ["Java", "Spring", "Hibernate", "EMF", "Xpand", "MWE2"],
+    "role": "Full-Stack Developer",
+    "period": "August 2010 – March 2011"
+  },
+  {
+    "title": "Medical Device Configuration Application",
+    "description": "Eclipse application for configuring a medical device. USB communication, Eclipse RAP, and BIRT integration for data visualization.",
+    "industry": "Medical Technology",
+    "technologies": ["Java", "Eclipse RCP", "Eclipse RAP", "SWT/JFace", "LibUsb", "EMF", "BIRT"],
+    "role": "System Architect, Developer",
+    "period": "July 2010 – February 2011"
+  },
+  {
+    "title": "Offer Information Management Web Application",
+    "description": "Web application for managing offer information. Coaching the development team in Bucharest, Romania on Eclipse and OSGi. Communication between Romania and Germany.",
+    "industry": "Telecommunications",
+    "technologies": ["Java", "Eclipse RAP", "SWT/JFace", "Spring-DM", "Databinding"],
+    "role": "Coach, Developer",
+    "period": "April 2010 – June 2010"
+  },
+  {
+    "title": "Environmental Information Management System",
+    "description": "Management system for environmentally relevant information. Software architecture and framework development. Coaching the development team. Technology consulting.",
+    "industry": "Government",
+    "technologies": ["Java", "Eclipse RCP", "SWT/JFace", "EMF", "Spring-DM", "Spring Remoting", "Hibernate"],
+    "role": "System Architect, Coach, Developer",
+    "period": "February 2009 – February 2010"
+  },
+  {
+    "title": "Content Management System Configuration Tool",
+    "description": "Management tool for configuring a content management system. Coaching the development team. Technology consulting.",
+    "industry": "Enterprise Content Management",
+    "technologies": ["Java", "Eclipse RCP", "SWT/JFace"],
+    "role": "Consultant, Coach",
+    "period": "November 2008 – February 2009"
+  },
+  {
+    "title": "Offline Knowledge Base Client for Medical Device Service Technicians",
+    "description": "Offline client for researching a knowledge base for medical device service technicians. Design and implementation of an RCP application. Focus on data security, SmartCard authentication, PKCS#11. Search through local datasets with ranking. Synchronization of local data with online inventory.",
+    "industry": "Medical Technology",
+    "technologies": ["Java", "Eclipse RCP", "SWT/JFace", "Apache Lucene", "EMF", "XFire", "ECF", "Java Security"],
+    "role": "Technical Project Lead, System Architect, Developer",
+    "period": "June 2008 – August 2009"
+  },
+  {
+    "title": "E-Learning Platform with Offline Client",
+    "description": "E-learning platform with an offline client for executing Flash/HTML e-learnings. Offline SCORM interface via XUL. Modular installation, updating, and uninstallation of learning content. Learning progress tracking with Learning Management System (LMS).",
+    "industry": "Industry",
+    "technologies": ["Java", "Eclipse RCP", "SWT/JFace", "EMF", "XFire", "ECF", "Mozilla XUL", "JAXB"],
+    "role": "System Architect, Developer",
+    "period": "April 2008 – July 2008"
+  },
+  {
+    "title": "Eclipse RCP Technology Consulting",
+    "description": "Technology consulting for Eclipse RCP, know-how transfer. Coaching offshore development team (porting Swing to SWT).",
+    "industry": "ECM Software",
+    "technologies": ["Java", "Eclipse RCP"],
+    "role": "Consultant, Coach",
+    "period": "March 2008 – June 2008"
+  },
+  {
+    "title": "PowerPoint Management System for Sales Representatives",
+    "description": "PowerPoint management system for sales representatives. Distribution tool for PowerPoint presentations. Modular installation, updating, and uninstallation of PowerPoint sets. Communication with PowerPoint and synchronization of meta information between Eclipse client and PowerPoint (via PPT Add-In). Server application for managing available slide sets. SWT visualization component for PowerPoint on 16:9 trade show computers.",
+    "industry": "Medical Technology",
+    "technologies": ["Java", "Eclipse RCP", "OSGi", "SWT/JFace/OLE", "EMF", "MS Add-In Technology"],
+    "role": "Technical Project Lead, System Architect, Developer",
+    "period": "December 2007 – June 2008"
+  },
+  {
+    "title": "E-Learning Platform",
+    "description": "E-learning platform with an offline client for executing Flash/HTML e-learnings. Modular installation, updating, and uninstallation of learning content.",
+    "industry": "Medical Technology",
+    "technologies": ["Java", "Eclipse RCP", "OSGi", "SWT/JFace", "EMF"],
+    "role": "System Architect, Developer",
+    "period": "November 2007 – February 2008"
+  },
+  {
+    "title": "RCP Application Test System for SAP Process Configuration",
+    "description": "Test system for a complex RCP application for SAP process configuration. Mapping requirement keys from specification to unit tests. Implementation of JUnit tests, Eclipse UI testing on JUnit basis. Build system for RCP application and test execution.",
+    "industry": "Industry",
+    "technologies": ["Java", "Eclipse RCP", "JUnit", "Ant", "PDE-Build", "WindowTester"],
+    "role": "Developer",
+    "period": "October 2007 – January 2008"
+  },
+  {
+    "title": "Medical Image Transfer Client",
+    "description": "Client for transferring medical images via SFTP and modification of DICOM attributes during upload.",
+    "industry": "Medical Technology",
+    "technologies": ["Java", "Eclipse RCP", "SWT/JFace"],
+    "role": "Developer",
+    "period": "August 2007 – September 2007"
+  },
+  {
+    "title": "Archived Book Series Management Application",
+    "description": "Client application for managing archived book series. PDF management including search functionality. Designed to run from a read-only medium (DVD).",
+    "industry": "Pharma",
+    "technologies": ["Java", "Eclipse RCP", "SWT/JFace", "Derby"],
+    "role": "Technical Project Lead, System Architect, Developer",
+    "period": "July 2007 – August 2008"
+  },
+  {
+    "title": "Medical Device Control Software",
+    "description": "Control software for a medical device. System architecture and coaching of the development team.",
+    "industry": "Medical Technology",
+    "technologies": ["Java", "Eclipse RCP", "EMF", "C++"],
+    "role": "Consultant, Coach, System Architect",
+    "period": "January 2007 – present"
+  },
+  {
+    "title": "Offline Opportunity Management Client",
+    "description": "Offline client for opportunity management for sales representatives.",
+    "industry": "Power Plant Manufacturing",
+    "technologies": ["Java", "Eclipse RCP", "SWT/JFace"],
+    "role": "System Architect, Developer",
+    "period": "December 2006 – February 2007"
+  },
+  {
+    "title": "Employee Evaluation Reporting Integration",
+    "description": "Reporting integration for a web application for employee evaluation.",
+    "industry": "Medical Technology",
+    "technologies": ["Java", "Eclipse BIRT", "Hibernate", "JavaScript"],
+    "role": "Developer",
+    "period": "October 2006 – December 2006"
+  },
+  {
+    "title": "Postal Delivery Certificate Management Application",
+    "description": "Implementation of an application for managing postal delivery certificates. Automated letter photography.",
+    "industry": "Postal Services",
+    "technologies": ["Java", "Eclipse RCP", "SWT/JFace", "HSQLDB", "Java Media Framework"],
+    "role": "System Architect, Developer",
+    "period": "August 2005 – October 2005"
+  },
+  {
+    "title": "Livelink Frontend UI Component Development",
+    "description": "UI component development for a Livelink frontend.",
+    "industry": "Medical Technology",
+    "technologies": ["Java", "Java Server Faces", "Livelink"],
+    "role": "Developer",
+    "period": "July 2005 – August 2005"
+  },
+  {
+    "title": "SAP Order System Configuration Management Software",
+    "description": "Management software for configuring and creating program routines of a SAP order system. Implementation of UI, data management, and graphical process editors. Specification.",
+    "industry": "Industry",
+    "technologies": ["Java", "Eclipse RCP", "SWT/JFace", "GEF", "Axis", "JAXB"],
+    "role": "Technical Project Lead, System Architect, Developer",
+    "period": "April 2005 – September 2007"
   }
 ]
