@@ -229,12 +229,18 @@ nav a.active {
   height: 140px;
   border-radius: 50%;
   border: 4px solid rgba(255, 255, 255, 0.1);
-  background: linear-gradient(135deg, var(--color-primary), var(--color-accent));
+  overflow: hidden;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 3.5rem;
   flex-shrink: 0;
+}
+
+.hero-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 20%;
 }
 
 /* ============================================================
