@@ -1,0 +1,122 @@
+---
+# Ansible Playbook: Deploy profile_website
+# Usage:
+#   ansible-playbook -i inventory.ini playbook.yml
+#   ansible-playbook -i inventory.ini playbook.yml --tags content   # deploy content only (no nginx setup)
+
+- name: Deploy profile_website
+  hosts: webservers
+  become: true
+
+  vars:
+    # Directory on the control node where the built site lives after `npm run build`
+    local_dist_dir: "{{ playbook_dir }}/../dist"
+    # Web root on the target server
+    web_root: /var/www/profile_website
+    # Nginx server name (override in inventory or via --extra-vars)
+    server_name: "{{ ansible_host }}"
+    # Nginx site config name
+    nginx_site_name: profile_website
+
+  pre_tasks:
+    - name: Ensure dist/ directory exists locally
+      delegate_to: localhost
+      become: false
+      stat:
+        path: "{{ local_dist_dir }}"
+      register: dist_stat
+
+    - name: Fail if dist/ does not exist – run 'npm run build' first
+      fail:
+        msg: >
+          The dist/ directory was not found at {{ local_dist_dir }}.
+          Please build the site first: npm run build
+      when: not dist_stat.stat.exists
+
+  tasks:
+    # ----------------------------------------------------------------
+    # 1. Install dependencies
+    # ----------------------------------------------------------------
+    - name: Install nginx
+      ansible.builtin.package:
+        name: nginx
+        state: present
+      tags: [setup, nginx]
+
+    # ----------------------------------------------------------------
+    # 2. Create web root directory
+    # ----------------------------------------------------------------
+    - name: Create web root directory
+      ansible.builtin.file:
+        path: "{{ web_root }}"
+        state: directory
+        owner: www-data
+        group: www-data
+        mode: "0755"
+      tags: [setup, content]
+
+    # ----------------------------------------------------------------
+    # 3. Synchronise built website files
+    # ----------------------------------------------------------------
+    - name: Sync website files to web root
+      ansible.posix.synchronize:
+        src: "{{ local_dist_dir }}/"
+        dest: "{{ web_root }}/"
+        delete: true
+        recursive: true
+        rsync_opts:
+          - "--exclude=.DS_Store"
+      notify: Reload nginx
+      tags: [content]
+
+    - name: Set correct ownership on web root
+      ansible.builtin.file:
+        path: "{{ web_root }}"
+        owner: www-data
+        group: www-data
+        recurse: true
+      tags: [content]
+
+    # ----------------------------------------------------------------
+    # 4. Configure nginx
+    # ----------------------------------------------------------------
+    - name: Write nginx site configuration
+      ansible.builtin.template:
+        src: templates/nginx_site.conf.j2
+        dest: "/etc/nginx/sites-available/{{ nginx_site_name }}"
+        owner: root
+        group: root
+        mode: "0644"
+      notify: Reload nginx
+      tags: [setup, nginx]
+
+    - name: Enable nginx site
+      ansible.builtin.file:
+        src: "/etc/nginx/sites-available/{{ nginx_site_name }}"
+        dest: "/etc/nginx/sites-enabled/{{ nginx_site_name }}"
+        state: link
+      notify: Reload nginx
+      tags: [setup, nginx]
+
+    - name: Disable default nginx site
+      ansible.builtin.file:
+        path: /etc/nginx/sites-enabled/default
+        state: absent
+      notify: Reload nginx
+      tags: [setup, nginx]
+
+    # ----------------------------------------------------------------
+    # 5. Ensure nginx is running
+    # ----------------------------------------------------------------
+    - name: Ensure nginx is started and enabled
+      ansible.builtin.service:
+        name: nginx
+        state: started
+        enabled: true
+      tags: [setup, nginx]
+
+  handlers:
+    - name: Reload nginx
+      ansible.builtin.service:
+        name: nginx
+        state: reloaded

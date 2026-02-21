@@ -1,0 +1,15 @@
+{
+  "name": "profile-website",
+  "version": "1.0.0",
+  "description": "Tom Seidel's Freelancer Profile Website",
+  "scripts": {
+    "build": "eleventy",
+    "serve": "eleventy --serve",
+    "watch": "eleventy --watch"
+  },
+  "dependencies": {
+    "@11ty/eleventy": "^2.0.1",
+    "markdown-it": "^14.0.0",
+    "markdown-it-anchor": "^8.6.7"
+  }
+}

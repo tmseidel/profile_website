@@ -1,0 +1,25 @@
+---
+layout: base.njk
+---
+<article class="article-page">
+  <div class="container">
+    <header class="article-header">
+      <div class="article-meta">
+        <span class="article-date">{{ date | dateFormat }}</span>
+        {% if tags %}
+        <div class="article-tags">
+          {% for tag in tags %}{% if tag != "articles" %}<span class="tag">{{ tag }}</span>{% endif %}{% endfor %}
+        </div>
+        {% endif %}
+      </div>
+      <h1>{{ title }}</h1>
+      {% if description %}<p class="article-lead">{{ description }}</p>{% endif %}
+    </header>
+    <div class="article-body">
+      {{ content | safe }}
+    </div>
+    <footer class="article-footer">
+      <a href="/articles/" class="btn-back">&larr; Back to Articles</a>
+    </footer>
+  </div>
+</article>

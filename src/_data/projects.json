@@ -1,0 +1,37 @@
+[
+  {
+    "title": "Cloud-Native Microservices Migration",
+    "description": "Led the architecture and implementation of migrating a large-scale monolithic Java EE application to a cloud-native microservices architecture on AWS. Designed service boundaries, set up CI/CD pipelines, and established DevOps practices across a team of 12 developers.",
+    "technologies": ["Java 17", "Spring Boot", "Kubernetes", "AWS EKS", "Terraform", "GitHub Actions"],
+    "status": "completed",
+    "period": "2022 – 2023"
+  },
+  {
+    "title": "IoT Data Platform",
+    "description": "Designed and implemented a high-throughput IoT data ingestion and processing platform handling millions of sensor messages per day. Integrated MQTT brokers, stream processing, and a time-series database backend.",
+    "technologies": ["Java", "Micronaut", "MQTT", "Apache Kafka", "InfluxDB", "Docker"],
+    "status": "completed",
+    "period": "2021 – 2022"
+  },
+  {
+    "title": "Enterprise DevOps Transformation",
+    "description": "Consulted a large enterprise in adopting DevOps practices and modernizing their delivery pipeline. Introduced container-based deployments, automated testing gates, and SCRUM-based processes.",
+    "technologies": ["Jenkins", "Docker", "Ansible", "Maven", "SonarQube", "JIRA"],
+    "status": "completed",
+    "period": "2020 – 2021"
+  },
+  {
+    "title": "OSGi Desktop Application Modernization",
+    "description": "Modernized a legacy OSGi-based desktop application used in industrial environments, introducing automated UI testing, refactoring the plugin architecture, and preparing the codebase for a cloud-connected future.",
+    "technologies": ["Java", "OSGi", "Eclipse RCP", "JUnit", "Maven"],
+    "status": "completed",
+    "period": "2019 – 2020"
+  },
+  {
+    "title": "Kubernetes-Based SaaS Platform",
+    "description": "Ongoing engagement architecting and evolving a multi-tenant SaaS platform running on Kubernetes. Responsibilities include Helm chart development, observability setup, and performance optimization.",
+    "technologies": ["Java", "Spring Boot", "Kubernetes", "Helm", "Prometheus", "Grafana"],
+    "status": "ongoing",
+    "period": "2024 – present"
+  }
+]
