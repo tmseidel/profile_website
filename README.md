@@ -33,8 +33,9 @@ profile_website/
 │   └── index.md            # Landing page
 ├── deploy/
 │   ├── .env.example        # Environment variables template (copy to .env)
+│   ├── deploy.sh           # Deployment wrapper script
 │   ├── playbook.yml        # Ansible deployment playbook
-│   ├── inventory.ini       # Ansible inventory (uses .env variables)
+│   ├── inventory.ini       # Ansible inventory (manual alternative)
 │   └── templates/
 │       └── nginx_site.conf.j2  # Nginx site config template
 ├── .eleventy.js            # Eleventy configuration
@@ -147,18 +148,21 @@ Status can be: `completed`, `ongoing`, or `confidential`.
 
    > **Note:** `deploy/.env` is git-ignored and will never be committed to the repository.
 
-4. Source the environment and run the playbook:
+4. Run the deployment:
    ```bash
    cd deploy
-   export $(grep -v '^#' .env | xargs)
-   ansible-playbook -i inventory.ini playbook.yml \
-     -e "server_name=$DOMAIN_NAME certbot_email=$CERTBOT_EMAIL"
+   ./deploy.sh
    ```
 
    To deploy only updated content (skip nginx/certbot setup):
    ```bash
-   ansible-playbook -i inventory.ini playbook.yml --tags content \
-     -e "server_name=$DOMAIN_NAME certbot_email=$CERTBOT_EMAIL"
+   ./deploy.sh content
+   ```
+
+   Any additional Ansible arguments can be appended:
+   ```bash
+   ./deploy.sh --check        # Dry run
+   ./deploy.sh content -v     # Content-only with verbose output
    ```
 
 The playbook will:

@@ -1,14 +1,13 @@
 ---
 # Ansible Playbook: Deploy profile_website
 # Usage:
-#   1. Copy .env.example to .env (in the project root) and fill in your values
-#   2. Source the .env file:  export $(grep -v '^#' .env | xargs)
-#   3. Run the playbook:
-#      ansible-playbook -i deploy/inventory.ini deploy/playbook.yml \
-#        -e "server_name=$DOMAIN_NAME certbot_email=$CERTBOT_EMAIL"
-#   4. Content-only deploy (no nginx/certbot setup):
-#      ansible-playbook -i deploy/inventory.ini deploy/playbook.yml --tags content \
-#        -e "server_name=$DOMAIN_NAME certbot_email=$CERTBOT_EMAIL"
+#   1. Copy deploy/.env.example to deploy/.env and fill in your values
+#   2. Run:  ./deploy.sh
+#   3. Content-only deploy:  ./deploy.sh content
+#
+# Manual usage (without deploy.sh):
+#   ansible-playbook -i inventory.ini playbook.yml \
+#     -e "server_name=yourdomain.com certbot_email=you@example.com"
 
 - name: Deploy profile_website
   hosts: webservers
