@@ -368,8 +368,10 @@ nav a.active {
    ============================================================ */
 .projects-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
   gap: 24px;
+  max-width: 900px;
+  margin: 0 auto;
 }
 
 .project-card {
@@ -427,8 +429,8 @@ nav a.active {
 
 .project-meta {
   display: flex;
-  flex-wrap: wrap;
-  gap: 12px;
+  flex-direction: column;
+  gap: 4px;
   font-size: 0.8125rem;
   color: var(--color-text-muted);
 }
