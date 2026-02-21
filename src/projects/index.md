@@ -28,6 +28,14 @@ description: A selection of projects where I've delivered value as a freelance J
         {% if project.period %}
         <div class="article-date">🗓️ {{ project.period }}</div>
         {% endif %}
+        <div class="project-meta">
+          {% if project.industry %}
+          <span class="project-industry">🏢 {{ project.industry }}</span>
+          {% endif %}
+          {% if project.role %}
+          <span class="project-role">👤 {{ project.role }}</span>
+          {% endif %}
+        </div>
         <p>{{ project.description }}</p>
         {% if project.technologies %}
         <div class="project-tech">
