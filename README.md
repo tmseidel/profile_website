@@ -32,8 +32,9 @@ profile_website/
 │   │   └── index.md        # Projects listing page
 │   └── index.md            # Landing page
 ├── deploy/
+│   ├── .env.example        # Environment variables template (copy to .env)
 │   ├── playbook.yml        # Ansible deployment playbook
-│   ├── inventory.ini       # Ansible inventory (configure your server)
+│   ├── inventory.ini       # Ansible inventory (uses .env variables)
 │   └── templates/
 │       └── nginx_site.conf.j2  # Nginx site config template
 ├── .eleventy.js            # Eleventy configuration
@@ -120,6 +121,7 @@ Status can be: `completed`, `ongoing`, or `confidential`.
 - A Linux server (Debian/Ubuntu recommended)
 - SSH access with sudo
 - Ansible installed on your local machine
+- A domain name pointing to the server (required for SSL)
 
 ### Steps
 
@@ -128,24 +130,41 @@ Status can be: `completed`, `ongoing`, or `confidential`.
    npm run build
    ```
 
-2. Configure your server in `deploy/inventory.ini`:
-   ```ini
-   [webservers]
-   webserver ansible_host=YOUR_SERVER_IP ansible_user=ubuntu ansible_ssh_private_key_file=~/.ssh/id_rsa
-   ```
-
-3. Run the playbook:
+2. Create your environment file from the template:
    ```bash
    cd deploy
-   ansible-playbook -i inventory.ini playbook.yml
+   cp .env.example .env
    ```
 
-   To deploy only updated content (skip nginx setup):
+3. Edit `deploy/.env` with your actual values:
+   ```dotenv
+   SERVER_IP=203.0.113.42
+   SSH_USER=ubuntu
+   SSH_KEY=~/.ssh/id_rsa
+   DOMAIN_NAME=yourdomain.com
+   CERTBOT_EMAIL=you@example.com
+   ```
+
+   > **Note:** `deploy/.env` is git-ignored and will never be committed to the repository.
+
+4. Source the environment and run the playbook:
    ```bash
-   ansible-playbook -i inventory.ini playbook.yml --tags content
+   cd deploy
+   export $(grep -v '^#' .env | xargs)
+   ansible-playbook -i inventory.ini playbook.yml \
+     -e "server_name=$DOMAIN_NAME certbot_email=$CERTBOT_EMAIL"
+   ```
+
+   To deploy only updated content (skip nginx/certbot setup):
+   ```bash
+   ansible-playbook -i inventory.ini playbook.yml --tags content \
+     -e "server_name=$DOMAIN_NAME certbot_email=$CERTBOT_EMAIL"
    ```
 
 The playbook will:
 - Install and configure nginx
 - Copy the built site to `/var/www/profile_website`
 - Configure caching, gzip, and security headers
+- Install Certbot and obtain a Let's Encrypt SSL certificate
+- Configure automatic HTTPS redirect
+- Enable automatic certificate renewal via systemd timer

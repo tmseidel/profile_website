@@ -7,6 +7,11 @@ server {
     root {{ web_root }};
     index index.html;
 
+    # Let's Encrypt ACME challenge (used by certbot for certificate renewal)
+    location /.well-known/acme-challenge/ {
+        root {{ web_root }};
+    }
+
     # Serve pre-built static files; fall back to index.html for SPA-style 404s
     location / {
         try_files $uri $uri/ $uri.html =404;
@@ -33,3 +38,8 @@ server {
     access_log /var/log/nginx/{{ nginx_site_name }}_access.log;
     error_log  /var/log/nginx/{{ nginx_site_name }}_error.log;
 }
+
+# NOTE: Certbot will automatically modify this file to add:
+#   - An HTTPS (port 443) server block with SSL certificate paths
+#   - A redirect from HTTP to HTTPS
+# Do not manually add SSL configuration here; let certbot manage it.
