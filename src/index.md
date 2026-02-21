@@ -18,7 +18,7 @@ title: Java Freelancer & Cloud-Native Specialist
         <a href="mailto:tom.seidel@remus-software.org" class="btn-secondary">📫 Get in Touch</a>
       </div>
     </div>
-    <div class="hero-avatar">👨‍💻</div>
+    <div class="hero-avatar"><img src="/assets/images/cv2.png" alt="Tom Seidel" /></div>
   </div>
 </section>
 
