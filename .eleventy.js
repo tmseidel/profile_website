@@ -25,6 +25,7 @@ module.exports = function (eleventyConfig) {
 
   // Pass through static assets
   eleventyConfig.addPassthroughCopy("src/assets");
+  eleventyConfig.addPassthroughCopy({ "src/llms.txt": "llms.txt" });
 
   // Articles collection (all markdown files in articles/ except index)
   eleventyConfig.addCollection("articles", function (collectionApi) {
@@ -46,6 +47,11 @@ module.exports = function (eleventyConfig) {
   // Current year filter for footer copyright
   eleventyConfig.addFilter("currentYear", function () {
     return new Date().getFullYear();
+  });
+
+  // ISO date string filter for sitemap
+  eleventyConfig.addFilter("dateISOString", function (date) {
+    return new Date(date).toISOString();
   });
 
   return {

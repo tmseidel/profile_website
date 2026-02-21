@@ -1,6 +1,7 @@
 ---
 layout: base.njk
 title: Java Freelancer & Cloud-Native Specialist
+description: Tom Seidel is a freelance Java consultant with 20+ years of experience in cloud-native architectures, microservices, and DevOps. Available for freelance and contract work.
 ---
 
 <!-- Hero -->
