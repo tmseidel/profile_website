@@ -9,6 +9,7 @@
   },
   "dependencies": {
     "@11ty/eleventy": "^2.0.1",
+    "dotenv": "^16.4.7",
     "markdown-it": "^14.0.0",
     "markdown-it-anchor": "^8.6.7"
   }

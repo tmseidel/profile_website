@@ -1,5 +1,6 @@
 const markdownIt = require("markdown-it");
 const markdownItAnchor = require("markdown-it-anchor");
+require("dotenv").config();
 
 module.exports = function (eleventyConfig) {
   // Configure markdown-it with mermaid diagram support
@@ -22,6 +23,9 @@ module.exports = function (eleventyConfig) {
   };
 
   eleventyConfig.setLibrary("md", md);
+
+  // Inject SITE_URL from environment into site data
+  eleventyConfig.addGlobalData("site.url", process.env.SITE_URL || "");
 
   // Pass through static assets
   eleventyConfig.addPassthroughCopy("src/assets");
