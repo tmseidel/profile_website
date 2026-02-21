@@ -1,0 +1,35 @@
+server {
+    listen 80;
+    listen [::]:80;
+
+    server_name {{ server_name }};
+
+    root {{ web_root }};
+    index index.html;
+
+    # Serve pre-built static files; fall back to index.html for SPA-style 404s
+    location / {
+        try_files $uri $uri/ $uri.html =404;
+    }
+
+    # Cache static assets aggressively
+    location ~* \.(css|js|png|jpg|jpeg|gif|svg|ico|woff|woff2|ttf|otf)$ {
+        expires 1y;
+        add_header Cache-Control "public, immutable";
+        access_log off;
+    }
+
+    # Security headers
+    add_header X-Frame-Options "SAMEORIGIN" always;
+    add_header X-Content-Type-Options "nosniff" always;
+    add_header Referrer-Policy "strict-origin-when-cross-origin" always;
+    add_header X-XSS-Protection "1; mode=block" always;
+
+    # Gzip compression
+    gzip on;
+    gzip_types text/plain text/css application/json application/javascript text/xml application/xml image/svg+xml;
+    gzip_min_length 256;
+
+    access_log /var/log/nginx/{{ nginx_site_name }}_access.log;
+    error_log  /var/log/nginx/{{ nginx_site_name }}_error.log;
+}

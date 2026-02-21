@@ -1,0 +1,42 @@
+---
+layout: base.njk
+title: Articles
+description: Technical articles on Java, cloud-native architecture, DevOps, and software engineering.
+---
+
+<section class="page-hero">
+  <div class="container">
+    <h1>📝 Articles</h1>
+    <p>Practical insights on Java development, cloud-native architecture, DevOps, and software engineering.</p>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container">
+    {% if collections.articles.length > 0 %}
+    <div class="articles-list">
+      {% for article in collections.articles %}
+      <div class="article-card">
+        <div class="article-card-body">
+          <h3><a href="{{ article.url }}">{{ article.data.title }}</a></h3>
+          {% if article.data.description %}<p>{{ article.data.description }}</p>{% endif %}
+          <div class="article-meta">
+            <span class="article-date">{{ article.date | dateFormat }}</span>
+            {% if article.data.tags %}
+            <div class="article-tags">
+              {% for tag in article.data.tags %}{% if tag != "articles" %}<span class="tag">{{ tag }}</span>{% endif %}{% endfor %}
+            </div>
+            {% endif %}
+          </div>
+        </div>
+        <span class="article-arrow">→</span>
+      </div>
+      {% endfor %}
+    </div>
+    {% else %}
+    <div class="empty-state">
+      <p>🚧 Articles coming soon. Stay tuned!</p>
+    </div>
+    {% endif %}
+  </div>
+</section>

@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>{% if title %}{{ title }} | Tom Seidel{% else %}Tom Seidel – Java Freelancer &amp; Cloud-Native Specialist{% endif %}</title>
+  <meta name="description" content="{% if description %}{{ description }}{% else %}Freelance Java consultant with 20+ years of experience in cloud-native, microservices, and DevOps.{% endif %}" />
+  <link rel="stylesheet" href="/assets/css/styles.css" />
+</head>
+<body>
+  <header class="site-header">
+    <div class="container">
+      <a href="/" class="logo">Tom Seidel</a>
+      <nav>
+        <a href="/">Home</a>
+        <a href="/projects/">Projects</a>
+        <a href="/articles/">Articles</a>
+        <a href="mailto:tom.seidel@remus-software.org" class="btn-contact">Contact</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    {{ content | safe }}
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div>
+          <h4>Tom Seidel</h4>
+          <p>Java Freelancer &amp; Cloud-Native Specialist</p>
+          <p>Based in Germany | Remote-first</p>
+        </div>
+        <div>
+          <h4>Links</h4>
+          <ul>
+            <li><a href="/">Home</a></li>
+            <li><a href="/projects/">Projects</a></li>
+            <li><a href="/articles/">Articles</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4>Contact</h4>
+          <ul>
+            <li><a href="mailto:tom.seidel@remus-software.org">tom.seidel@remus-software.org</a></li>
+            <li><a href="https://linkedin.com/in/tomseidel" target="_blank" rel="noopener">LinkedIn</a></li>
+            <li><a href="https://github.com/tmseidel" target="_blank" rel="noopener">GitHub</a></li>
+          </ul>
+        </div>
+      </div>
+      <p class="footer-copy">&copy; {{ "" | currentYear }} Tom Seidel. Built with Eleventy.</p>
+    </div>
+  </footer>
+
+  <!-- Mermaid.js for diagram rendering -->
+  <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+  <script>
+    mermaid.initialize({ startOnLoad: true, theme: 'default' });
+  </script>
+  <script src="/assets/js/main.js"></script>
+</body>
+</html>
