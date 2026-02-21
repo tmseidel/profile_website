@@ -1,0 +1,30 @@
+# Tom Seidel – Java Freelancer & Cloud-Native Specialist
+
+> Freelance Java consultant with 20+ years of experience in cloud-native, microservices, and DevOps. Based in Germany, remote-first.
+
+Tom Seidel is a freelance consultant specializing in Java development, cloud-native architectures, and DevOps. He supports projects end-to-end: from initial concept and architecture to production-ready implementation. His focus areas include migrating monolithic systems to scalable microservice architectures and launching new Java-based cloud projects.
+
+## Contact
+
+- Email: tom.seidel@remus-software.org
+- LinkedIn: [linkedin.com/in/tomseidel](https://linkedin.com/in/tomseidel)
+- GitHub: [github.com/tmseidel](https://github.com/tmseidel)
+
+## Sections
+
+- [Home](https://tomseidel.com/): Overview, about, tech stack, and availability
+- [Projects](https://tomseidel.com/projects/): A curated selection of 30+ project references across automotive, medical technology, telecommunications, and more
+- [Articles](https://tomseidel.com/articles/): Technical articles on Java, cloud-native architecture, DevOps, and software engineering
+
+## Skills & Technologies
+
+Languages: Java, Kotlin, Bash, Python, TypeScript
+Frameworks: Spring Boot, Micronaut, OSGi, React
+Cloud Platforms: AWS, Azure, OVH, Hetzner
+DevOps: Docker, Kubernetes, Helm, Terraform, Maven, Ansible
+CI/CD: GitHub Actions, Jenkins, GitLab CI
+Tools & Protocols: Git, REST, gRPC, MQTT, WebSockets, oAuth2
+
+## Availability
+
+Open for freelance and contract work. Remote-first, based in Germany (CET/CEST timezone). Prefers remote work but open to on-site at regular intervals.

@@ -1,0 +1,12 @@
+{
+  "name": "Tom Seidel",
+  "description": "Freelance Java consultant with 20+ years of experience in cloud-native, microservices, and DevOps.",
+  "language": "en",
+  "author": {
+    "name": "Tom Seidel",
+    "email": "tom.seidel@remus-software.org",
+    "jobTitle": "Java Freelancer & Cloud-Native Specialist",
+    "linkedin": "https://linkedin.com/in/tomseidel",
+    "github": "https://github.com/tmseidel"
+  }
+}

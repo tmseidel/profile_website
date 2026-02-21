@@ -3,8 +3,37 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>{% if title %}{{ title }} | Tom Seidel{% else %}Tom Seidel – Java Freelancer &amp; Cloud-Native Specialist{% endif %}</title>
-  <meta name="description" content="{% if description %}{{ description }}{% else %}Freelance Java consultant with 20+ years of experience in cloud-native, microservices, and DevOps.{% endif %}" />
+  {% set pageTitle %}{% if title %}{{ title }} | {{ site.name }}{% else %}{{ site.name }} – {{ site.author.jobTitle }}{% endif %}{% endset %}
+  {% set pageDescription %}{% if description %}{{ description }}{% else %}{{ site.description }}{% endif %}{% endset %}
+  <title>{{ pageTitle | safe }}</title>
+  <meta name="description" content="{{ pageDescription | safe }}" />
+  <link rel="canonical" href="{{ site.url }}{{ page.url }}" />
+  <!-- Open Graph -->
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="{{ pageTitle | safe }}" />
+  <meta property="og:description" content="{{ pageDescription | safe }}" />
+  <meta property="og:url" content="{{ site.url }}{{ page.url }}" />
+  <meta property="og:site_name" content="{{ site.name }}" />
+  <meta property="og:locale" content="{{ site.language }}" />
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="{{ pageTitle | safe }}" />
+  <meta name="twitter:description" content="{{ pageDescription | safe }}" />
+  <!-- JSON-LD Structured Data -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Person",
+    "name": "{{ site.author.name | safe }}",
+    "url": "{{ site.url | safe }}",
+    "jobTitle": "{{ site.author.jobTitle | safe }}",
+    "email": "{{ site.author.email | safe }}",
+    "sameAs": [
+      "{{ site.author.linkedin | safe }}",
+      "{{ site.author.github | safe }}"
+    ]
+  }
+  </script>
   <link rel="stylesheet" href="/assets/css/styles.css" />
 </head>
 <body>
