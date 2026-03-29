@@ -23,6 +23,38 @@ description: Tom Seidel is a freelance Java consultant with 20+ years of experie
   </div>
 </section>
 
+<!-- Latest Articles -->
+<section class="section section-alt">
+  <div class="container">
+    <h2 class="section-title">📝 Latest Articles</h2>
+    <p class="section-lead">Recent insights and case studies from my work.</p>
+    {%- if collections.articles.length > 0 %}
+    <div class="articles-list">
+      {%- for article in collections.articles | head(2) %}
+      <div class="article-card">
+        <div class="article-card-body">
+          <h3><a href="{{ article.url }}">{{ article.data.title }}</a></h3>
+          {%- if article.data.description %}<p class="article-card-desc">{{ article.data.description }}</p>{% endif %}
+          <div class="article-meta">
+            <span class="article-date">{{ article.date | dateFormat }}</span>
+            {%- if article.data.tags %}
+            <div class="article-tags">
+              {%- for tag in article.data.tags %}{% if tag != "articles" %}<span class="tag">{{ tag }}</span>{% endif %}{%- endfor %}
+            </div>
+            {%- endif %}
+          </div>
+        </div>
+        <span class="article-arrow">→</span>
+      </div>
+      {%- endfor %}
+    </div>
+    <div style="margin-top: 24px;">
+      <a href="/articles/" class="btn-primary">View All Articles →</a>
+    </div>
+    {%- endif %}
+  </div>
+</section>
+
 <!-- About -->
 <section class="section">
   <div class="container">

@@ -1,5 +1,6 @@
 const markdownIt = require("markdown-it");
 const markdownItAnchor = require("markdown-it-anchor");
+const markdownItFootnote = require("markdown-it-footnote");
 require("dotenv").config();
 
 module.exports = function (eleventyConfig) {
@@ -10,7 +11,7 @@ module.exports = function (eleventyConfig) {
     typographer: true,
   }).use(markdownItAnchor, {
     permalink: markdownItAnchor.permalink.headerLink(),
-  });
+  }).use(markdownItFootnote);
 
   // Render ```mermaid code blocks as <div class="mermaid"> for mermaid.js
   const defaultFence = md.renderer.rules.fence.bind(md.renderer.rules);
@@ -31,6 +32,14 @@ module.exports = function (eleventyConfig) {
   eleventyConfig.addPassthroughCopy("src/assets");
   eleventyConfig.addPassthroughCopy({ "src/llms.txt": "llms.txt" });
 
+  // Pass through article images (subfolders containing images)
+  eleventyConfig.addPassthroughCopy("src/articles/**/*.png");
+  eleventyConfig.addPassthroughCopy("src/articles/**/*.jpg");
+  eleventyConfig.addPassthroughCopy("src/articles/**/*.jpeg");
+  eleventyConfig.addPassthroughCopy("src/articles/**/*.gif");
+  eleventyConfig.addPassthroughCopy("src/articles/**/*.svg");
+  eleventyConfig.addPassthroughCopy("src/articles/**/*.webp");
+
   // Articles collection (all markdown files in articles/ except index)
   eleventyConfig.addCollection("articles", function (collectionApi) {
     return collectionApi
@@ -46,6 +55,12 @@ module.exports = function (eleventyConfig) {
       month: "long",
       day: "numeric",
     });
+  });
+
+  // Return the first N items of an array
+  eleventyConfig.addFilter("head", function (array, n) {
+    if (!Array.isArray(array)) return array;
+    return array.slice(0, n);
   });
 
   // Current year filter for footer copyright
