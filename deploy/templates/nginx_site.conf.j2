@@ -32,7 +32,7 @@ server {
 
     # Gzip compression
     gzip on;
-    gzip_types text/plain text/css application/json application/javascript text/xml application/xml image/svg+xml;
+    gzip_types text/plain text/css application/json application/javascript text/xml application/xml application/atom+xml image/svg+xml;
     gzip_min_length 256;
 
     access_log /var/log/nginx/{{ nginx_site_name }}_access.log;

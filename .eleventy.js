@@ -25,8 +25,10 @@ module.exports = function (eleventyConfig) {
 
   eleventyConfig.setLibrary("md", md);
 
-  // Inject SITE_URL from environment into site data
-  eleventyConfig.addGlobalData("site.url", process.env.SITE_URL || "");
+  // Inject SITE_URL from environment into site data (overrides site.json only if set)
+  if (process.env.SITE_URL) {
+    eleventyConfig.addGlobalData("site.url", process.env.SITE_URL);
+  }
 
   // Pass through static assets
   eleventyConfig.addPassthroughCopy("src/assets");
@@ -71,6 +73,26 @@ module.exports = function (eleventyConfig) {
   // ISO date string filter for sitemap
   eleventyConfig.addFilter("dateISOString", function (date) {
     return new Date(date).toISOString();
+  });
+
+  // Strip HTML tags (for llms-full.txt plain-text output)
+  eleventyConfig.addFilter("striptags", function (str) {
+    if (!str) return "";
+    return str
+      .replace(/<[^>]*>/g, "")
+      .replace(/\n{3,}/g, "\n\n")
+      .trim();
+  });
+
+  // HTML escape filter (for Atom feed)
+  eleventyConfig.addFilter("escape", function (str) {
+    if (!str) return "";
+    return str
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;")
+      .replace(/'/g, "&#039;");
   });
 
   return {

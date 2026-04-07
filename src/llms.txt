@@ -15,6 +15,14 @@ Tom Seidel is a freelance consultant specializing in Java development, cloud-nat
 - [Home](https://tomseidel.com/): Overview, about, tech stack, and availability
 - [Projects](https://tomseidel.com/projects/): A curated selection of 30+ project references across automotive, medical technology, telecommunications, and more
 - [Articles](https://tomseidel.com/articles/): Technical articles on Java, cloud-native architecture, DevOps, and software engineering
+- [Atom Feed](https://tomseidel.com/feed.xml): Article feed in Atom format
+
+## Articles
+
+- [Restic Explorer 1.0 — A Lightweight Monitoring Dashboard for Restic Backups](https://tomseidel.com/articles/rest-explorer-1-0-released/): Restic Explorer 1.0 is out — a lightweight, self-hosted web dashboard that monitors all restic backup repositories.
+- [From Legacy to Lean: Rethinking Your Backup Strategy](https://tomseidel.com/articles/replacing-veeam-with-restic/): How we replaced a costly, complex backup system with a simple shell script and S3 storage.
+- [Evaluating Self-Hosted AI Services: A Translation Service Case Study](https://tomseidel.com/articles/self-hosted-ai-translation-service/): A practical evaluation of replacing DeepL with a self-hosted translation service using open-source LLMs.
+- [Migrating a Monolith to Microservices: A Practical Guide](https://tomseidel.com/articles/monolith-to-microservices/): A hands-on walkthrough of architectural decisions and patterns for migrating Java monoliths to cloud-native microservices.
 
 ## Skills & Technologies
 
@@ -28,3 +36,8 @@ Tools & Protocols: Git, REST, gRPC, MQTT, WebSockets, oAuth2
 ## Availability
 
 Open for freelance and contract work. Remote-first, based in Germany (CET/CEST timezone). Prefers remote work but open to on-site at regular intervals.
+
+## Optional
+
+For the full-text version of all content, see: https://tomseidel.com/llms-full.txt
+
