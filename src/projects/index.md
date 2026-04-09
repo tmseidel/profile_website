@@ -7,7 +7,7 @@ description: A selection of projects where I've delivered value as a freelance J
 <section class="page-hero">
   <div class="container">
     <h1>📂 Project References</h1>
-    <p>A curated selection of engagements showcasing my hands-on work across cloud, backend, and DevOps domains.</p>
+    <p>A curated selection of engagements showcasing my hands-on work across cloud, backend, AI, and DevOps domains.</p>
   </div>
 </section>
 

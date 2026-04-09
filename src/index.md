@@ -1,7 +1,7 @@
 ---
 layout: base.njk
-title: Java Freelancer & Cloud-Native Specialist
-description: Tom Seidel is a freelance Java consultant with 20+ years of experience in cloud-native architectures, microservices, and DevOps. Available for freelance and contract work.
+title: Java Freelancer & Cloud-Native AI Specialist
+description: Tom Seidel is a freelance Java consultant with 20+ years of experience in cloud-native architectures, microservices, DevOps, and AI-powered agentic systems. Available for freelance and contract work.
 ---
 
 <!-- Hero -->
@@ -9,9 +9,9 @@ description: Tom Seidel is a freelance Java consultant with 20+ years of experie
   <div class="container">
     <div class="hero-content">
       <span class="hero-badge">👨‍💻 Available for freelance &amp; contract work</span>
-      <h1>Java Freelancer &amp;<br/>Cloud-Native Specialist</h1>
+      <h1>Java Freelancer &amp;<br/>Cloud-Native AI Specialist</h1>
       <p class="hero-subtitle">
-        20+ years of experience delivering robust, scalable software — from enterprise desktop to cloud-native microservices.
+        20+ years of experience delivering robust, scalable software — from enterprise desktop to cloud-native microservices and AI-powered agentic systems.
       </p>
       <div class="hero-actions">
         <a href="/projects/" class="btn-primary">📂 View Projects</a>
@@ -64,13 +64,14 @@ description: Tom Seidel is a freelance Java consultant with 20+ years of experie
         <p>
           I'm <strong>Tom Seidel</strong>, a freelance consultant with over 20 years of experience in Java development.
           My focus lies in designing and implementing sophisticated software solutions — from traditional desktop
-          applications to modern, containerized web applications in the cloud.
+          applications to modern, containerized web applications in the cloud, and increasingly AI-powered agentic systems.
         </p>
         <p>
           As both a developer and architect, I support projects end-to-end: from the initial concept and architecture
-          to production-ready implementation. In recent years, I've specialized in cloud technologies, helping companies
-          successfully launch new Java-based cloud projects or migrate existing monolithic systems to scalable
-          microservice architectures — leveraging modern DevOps tools and methodologies.
+          to production-ready implementation. In recent years, I've specialized in cloud technologies and AI integration,
+          helping companies successfully launch new Java-based cloud projects, migrate existing monolithic systems to scalable
+          microservice architectures, and build intelligent agentic workflows — leveraging modern DevOps tools,
+          LLM APIs (Anthropic, OpenAI, Ollama, llama.cpp), and cutting-edge AI methodologies.
         </p>
         <p>
           <strong>My goal:</strong> to deliver sustainable, maintainable, and high-performance software solutions
@@ -83,7 +84,7 @@ description: Tom Seidel is a freelance Java consultant with 20+ years of experie
           <h3>Mission</h3>
           <p>
             To empower businesses by delivering robust, scalable, and future-proof cloud-native solutions
-            using modern Java technologies — ensuring agility, performance, and long-term maintainability.
+            using modern Java technologies and AI-driven automation — ensuring agility, performance, and long-term maintainability.
           </p>
         </div>
       </div>
@@ -111,6 +112,11 @@ description: Tom Seidel is a freelance Java consultant with 20+ years of experie
         <div class="value-icon">🧩</div>
         <h3>Modular Architecture</h3>
         <p>Apply microservices and clean code principles for maintainable systems.</p>
+      </div>
+      <div class="value-card">
+        <div class="value-icon">🤖</div>
+        <h3>AI &amp; Agentic Systems</h3>
+        <p>Design and integrate LLM-powered agentic workflows into Java backends using Anthropic, OpenAI, Ollama, and llama.cpp.</p>
       </div>
       <div class="value-card">
         <div class="value-icon">🚀</div>
@@ -188,6 +194,17 @@ description: Tom Seidel is a freelance Java consultant with 20+ years of experie
           <span class="tech-tag">Bash</span>
           <span class="tech-tag">Python</span>
           <span class="tech-tag">TypeScript</span>
+        </div>
+      </div>
+      <div class="tech-category">
+        <h3>AI &amp; LLM</h3>
+        <div class="tech-tags">
+          <span class="tech-tag">Anthropic API</span>
+          <span class="tech-tag">OpenAI API</span>
+          <span class="tech-tag">Ollama</span>
+          <span class="tech-tag">llama.cpp</span>
+          <span class="tech-tag">Agentic Workflows</span>
+          <span class="tech-tag">Hugging Face</span>
         </div>
       </div>
       <div class="tech-category">
