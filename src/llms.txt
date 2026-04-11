@@ -19,6 +19,7 @@ Tom Seidel is a freelance consultant specializing in Java development, cloud-nat
 
 ## Articles
 
+- [Running Docker Engine in WSL2 alongside Docker Desktop for Windows](https://tomseidel.com/articles/kb_two_docker/): A practical guide to running both Docker Engine natively in WSL2 and Docker Desktop for Windows in complete isolation — diagnosing conflicts, fixing networking issues, and configuring coexistence.
 - [Building an AI Agent for Code Generation: Lessons from 9 Iterations](https://tomseidel.com/articles/how-to-develop-an-ai-agent/): Practical lessons learned from developing an agentic AI system that generates source code — from naive prompting to a robust, tool-using agent with diff-based updates and dynamic context management.
 - [Restic Explorer 1.0 — A Lightweight Monitoring Dashboard for Restic Backups](https://tomseidel.com/articles/rest-explorer-1-0-released/): Restic Explorer 1.0 is out — a lightweight, self-hosted web dashboard that monitors all restic backup repositories.
 - [From Legacy to Lean: Rethinking Your Backup Strategy](https://tomseidel.com/articles/replacing-veeam-with-restic/): How we replaced a costly, complex backup system with a simple shell script and S3 storage.

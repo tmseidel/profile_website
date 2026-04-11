@@ -16,7 +16,7 @@ Building software with an AI agent at its core is fundamentally different from t
 
 ## The Paradigm Shift: Inversion of Control
 
-The single biggest mental shift when building agentic systems is the **inversion of control flow**. In traditional software, the application owns the business logic and orchestrates every step. In an agentic system, the AI holds the business logic — the surrounding program merely acts as a communication partner, executing commands on the agent's behalf.
+The single biggest mental shift when building agentic systems is the **inversion of control flow**. In traditional software, the application owns the business logic and orchestrates every step. In an agentic system, a significant portion of that decision-making shifts to the AI — the surrounding program increasingly acts as a communication partner, executing commands on the agent's behalf.
 
 ```mermaid
 graph LR
@@ -36,7 +36,66 @@ graph LR
     end
 ```
 
-Your application becomes an **execution environment** for the agent. It provides tools, fetches context, applies file changes, and reports results — but it no longer decides *what* to do. The agent decides.
+Your application becomes, to a large degree, an **execution environment** for the agent. It provides tools, fetches context, applies file changes, and reports results — while the agent takes on much of the reasoning about *what* to do. In practice, the split is not black and white — which is exactly what the next section explores.
+
+## Designing the Agent Flow: What to Keep, What to Delegate
+
+Once you accept the inversion of control, the next critical question is: **which actions belong in your application, and which do you delegate to the LLM?** This is not an all-or-nothing decision — it's a spectrum, and every point on it has trade-offs.
+
+### Keeping Logic in the Application
+
+Deterministic steps — file I/O, git operations, API calls, JSON parsing, diff application — are natural candidates for application-side logic.
+
+**Advantages:**
+- **Predictable and fast.** Same input, same output, every time. No API latency, no token cost.
+- **Testable.** You can write unit tests with clear assertions.
+- **Debuggable.** Stack traces, breakpoints, and logging work exactly as expected.
+
+**Disadvantages:**
+- **Rigid.** You must anticipate every edge case upfront. An unexpected file format or an unusual error message breaks the flow.
+- **More code to maintain.** Every special case becomes an `if` branch or a new parser.
+
+### Delegating Logic to the LLM
+
+Reasoning tasks — deciding *what* to change, interpreting error messages, choosing a fix strategy, analysing code structure — are where the LLM excels.
+
+**Advantages:**
+- **Flexible and adaptive.** The model handles novel situations without explicit programming.
+- **Reduces code complexity.** A single prompt can replace hundreds of lines of hand-coded decision trees.
+- **Understands intent.** The AI can reason about *why* something should change, not just *what* the syntax rules say.
+
+**Disadvantages:**
+- **Non-deterministic.** The same input can produce different outputs on each run.
+- **Slower.** Each LLM call adds 5–30 seconds of latency depending on the model and input size.
+- **Token cost.** Every delegation costs money and consumes context window space.
+- **Hallucination risk.** The model may confidently produce incorrect results.
+- **Harder to test.** Assertions on LLM output are inherently fuzzy.
+
+### Finding the Right Split
+
+In practice, the division that worked best for our code generation agent was:
+
+```mermaid
+flowchart LR
+    subgraph "Application (deterministic)"
+        A[File I/O]
+        B[Git operations]
+        C[Diff application]
+        D[JSON parsing]
+        E[Tool execution]
+    end
+    subgraph "LLM (reasoning)"
+        F[Code generation]
+        G[Error analysis]
+        H[Fix strategy]
+        I[Choosing validation tools]
+        J[Context requests]
+    end
+    E -->|results| G
+    G -->|decisions| A
+```
+
+The guiding principle: **if a step requires understanding intent or adapting to ambiguity, delegate it. If it requires reliability and speed, keep it in the application.** As you will see throughout the iterations below, we gradually moved *more* logic to the AI side — not because we wanted to, but because the deterministic alternatives kept failing on edge cases.
 
 ## The Tightrope Walk: Context Window vs. Output Quality
 
@@ -46,13 +105,35 @@ One of the most persistent challenges is balancing the context window. Too littl
 
 This interplay shaped almost every iteration of the agent.
 
+## The Iteration Dilemma: How Many Loops?
+
+Closely related to the context problem is the question of **how many iterations to allow** between your application and the LLM. LLMs have a remarkable ability to improve their output when given feedback — a compilation error sent back to the model often results in a correct fix on the second attempt. This makes iterative correction loops very attractive.
+
+But iteration comes at a price:
+
+- **Time.** Each round-trip adds 10–30 seconds of latency. Three retry loops turn a 15-second task into a two-minute task.
+- **Context bloat.** Every iteration appends messages to the conversation — the error report, the AI's response, the next error report. The context window fills up fast, which degrades output quality (see above).
+- **Hallucination drift.** Counter-intuitively, too many iterations can make things *worse*. After three or four failed attempts, the AI tends to "drift" — introducing new errors while fixing old ones, inventing methods that don't exist, or producing solutions that look plausible but are semantically wrong. The model starts optimising for *passing the immediate check* rather than *being correct*.
+- **Cost.** Each iteration consumes tokens. With large context windows, a single retry can cost as much as the original request.
+
+### Practical Guards
+
+Through experimentation, we arrived at the following guidelines:
+
+- **Hard caps on every loop.** No open-ended retries. We used 3 rounds for file requests, 5 rounds for code validation loops, and 3 rounds for diff recovery attempts.
+- **Progress monitoring.** If the error count isn't decreasing between iterations, abort early. An AI that produces *more* errors after a fix attempt is unlikely to recover.
+- **Compaction between rounds.** Summarise earlier turns aggressively to keep the context lean (see Iteration 3).
+- **Escalation, not repetition.** If simple "fix this error" prompts fail twice, escalate to a richer strategy — provide more context, rephrase the problem, or fall back to a full file regeneration instead of incremental fixes.
+
+> **Rule of thumb:** If your agent hasn't solved the problem in three iterations, throwing more iterations at it is unlikely to help — you need a different strategy, not more attempts.
+
 ## Core Principles
 
 Before diving into the iterations, here are the overarching lessons:
 
 1. **Always give the AI the ability to request more information.** Never assume your initial context is sufficient. Let the agent ask for files, type definitions, or documentation on demand.
 2. **Define a protocol in the system prompt for structured output** — but build your application to be resilient against protocol violations. The AI will *sometimes* deviate from the agreed JSON schema, return partial responses, or mix formats. Your parser must handle this gracefully.
-3. **The agent is the orchestrator** — your code is the infrastructure.
+3. **The agent drives the reasoning** — your code provides the infrastructure and guardrails.
 
 ## Iteration 1 — Naive Generate-and-Validate Loop
 
@@ -203,6 +284,31 @@ flowchart TD
 
 **Lesson:** The AI often knows better than a hardcoded validator what constitutes "correct" in a given context. A Java project needs `mvn compile`; a Node project needs `npm run build`; a Python project might need `pytest`. Let the agent choose.
 
+### The Tool Selection Problem
+
+Letting the AI choose *which* tool to run immediately raises a thorny question: **which tools do you allow it to execute at all?**
+
+This is one of the hardest design decisions in an agentic system, and the answer should be conservative: **allow the absolute minimum set of tools needed to get the job done.** Every tool you expose is:
+
+- **A security risk.** A build command like `mvn compile` is safe. An arbitrary shell command is not. The distance between "run my tests" and `rm -rf /` is one hallucinated token.
+- **A source of complexity.** More tool types mean more parsing, more error handling, more edge cases in your host program.
+- **A surface for misuse.** The AI might call tools in unexpected ways, with unexpected arguments, or in unexpected order. The more tools available, the larger the space of possible (and possibly harmful) interactions.
+
+For our code generation agent, the minimal toolset was:
+
+| Tool | Purpose |
+|---|---|
+| Read file | Fetch source code from the repository |
+| Write file / apply diff | Modify source code |
+| Execute build command | Validate changes (`mvn compile`, `npm run build`, etc.) |
+| Request additional files | Ask for more context |
+
+We deliberately did *not* expose: arbitrary shell access, database queries, network requests, or deployment commands. Each tool that didn't make this list was considered and rejected because it either wasn't strictly necessary or introduced unacceptable risk.
+
+**Sandboxing is essential.** Even with a minimal toolset, run tool executions in an isolated environment. Restrict file system access to the project directory. Set timeouts on build commands. Log every tool invocation for audit. The AI is not malicious, but it is unpredictable — and unpredictable + powerful = dangerous.
+
+> **Principle:** Start with zero tools and add them only when the agent demonstrably cannot complete its task without them. Resist the temptation to expose "just one more" convenience tool.
+
 ## Iteration 8 — Resilient JSON Parsing
 
 With complex multi-turn conversations, the AI occasionally produced truncated or malformed JSON — especially near token limits. The `repairTruncatedJson` method was overhauled:
@@ -247,11 +353,14 @@ After nine iterations, these are the principles I'd carry into any agentic syste
 | Principle | Detail |
 |---|---|
 | **Inversion of control** | The agent drives the logic; your app is the execution environment. |
+| **Choose the split wisely** | Keep deterministic steps in the app; delegate reasoning to the LLM. Each side has clear trade-offs. |
 | **Context is everything** | Invest heavily in smart, dynamic context gathering. |
+| **Cap your iteration loops** | LLMs improve with feedback, but after 3 failed attempts, change your strategy — don't just retry. |
 | **Let the agent ask for more** | Never assume you've provided enough information upfront. |
 | **Define a protocol, but be resilient** | Structured output formats are essential, but the AI will violate them. Build robust parsers. |
 | **Minimise token waste** | Use diffs, summaries, and deduplication to keep the context window focused. |
 | **Delegate validation to the agent** | The AI knows the build system better than a hardcoded checker. |
+| **Minimise the toolset** | Expose only the tools strictly needed. Every additional tool is a security risk and a source of complexity. |
 | **Use the AI to fix AI failures** | When diff application or parsing fails, ask the AI to resolve it. |
 
 Building agentic systems is an exercise in designing for uncertainty. The AI is powerful but imprecise. Your surrounding infrastructure must be resilient, adaptive, and willing to hand control back to the agent when deterministic approaches fail. The result is a system that is more capable than either part alone.

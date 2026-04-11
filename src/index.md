@@ -30,7 +30,7 @@ description: Tom Seidel is a freelance Java consultant with 20+ years of experie
     <p class="section-lead">Recent insights and case studies from my work.</p>
     {%- if collections.articles.length > 0 %}
     <div class="articles-list">
-      {%- for article in collections.articles | head(2) %}
+      {%- for article in collections.articles | head(3) %}
       <div class="article-card">
         <div class="article-card-body">
           <h3><a href="{{ article.url }}">{{ article.data.title }}</a></h3>
