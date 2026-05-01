@@ -1,7 +1,7 @@
 ---
 layout: article.njk
 title: "Building an AI Agent for Code Generation: Lessons from 9 Iterations"
-description: "Practical lessons learned from developing an agentic AI system that generates source code — from naive prompting to a robust, tool-using agent with diff-based updates and dynamic context management."
+description: "Practical lessons learned from developing an agentic AI system that generates source code — from naive prompting to a robust, tool-using agent with dynamic context management and explicit tool requests."
 date: 2026-04-07
 tags:
   - articles
@@ -241,7 +241,9 @@ The host program fetches the requested files and continues the conversation.
 | Follow-up without new files | Tree + file list | Only comment | ~90% |
 | Iterative requests | All files again | Only requested files | ~70% |
 
-**Lesson:** Give the AI the tools to be efficient. Diff-based output and on-demand file requests transform a chatty, wasteful interaction into a focused, surgical one.
+**Lesson:** Give the AI the tools to be efficient. Diff-based output and on-demand file requests transformed a chatty, wasteful interaction into a focused, surgical one.
+
+In hindsight, though, this was an important *transitional* design, not the final one. Diff-based updates reduced token usage, but they also introduced a fragile mini-language that the host application had to interpret and repair.
 
 ## Iteration 6 — Robust Diff Application
 
@@ -259,6 +261,8 @@ Additionally, the `IssueImplementationService` was ignoring AI responses that co
 - Allow a maximum of **three rounds** of file requests to prevent infinite loops.
 
 **Lesson:** The interface between AI output and your application is inherently fuzzy. Build robust parsers, add fallback strategies, and always cap iteration counts.
+
+That said, there is a deeper lesson here: every extra recovery rule in the host is a signal that the protocol itself may be too brittle. If you keep adding fuzzy matching, placeholder handling, and recovery paths, you may be compensating for the wrong abstraction.
 
 ## Iteration 7 — AI-Driven Validation with Tools
 
@@ -299,7 +303,7 @@ For our code generation agent, the minimal toolset was:
 | Tool | Purpose |
 |---|---|
 | Read file | Fetch source code from the repository |
-| Write file / apply diff | Modify source code |
+| File tools (`write-file`, `patch-file`, `mkdir`, `delete-file`) | Modify source code |
 | Execute build command | Validate changes (`mvn compile`, `npm run build`, etc.) |
 | Request additional files | Ask for more context |
 
@@ -346,6 +350,29 @@ This is far more robust than implementing ever-more-complex matching strategies 
 
 **Lesson:** When your deterministic code fails, don't add more deterministic complexity — delegate back to the AI. It can reason about intent in ways that string matching never will.
 
+## Postscript — Tool Requests Beat Fragile Diff Protocols
+
+After publishing the original version of this architecture, I revisited a later iteration of the agent and checked how the design had evolved over time. The pattern was clear: there were several rounds of hardening around diff handling, but eventually the `fileChanges` mechanism was removed entirely and replaced with tool-based file operations.
+
+That refactoring switched the protocol from *describing* edits as a custom JSON diff format to *requesting concrete actions*:
+
+- `write-file`
+- `patch-file`
+- `mkdir`
+- `delete-file`
+
+All of these are executed through `runTools`, alongside validation commands. In other words, file mutation stopped being a special side channel and became just another tool request.
+
+This turned out to be much more robust for three reasons:
+
+1. The contract is simpler. The host executes explicit operations instead of parsing and heuristically applying a synthetic diff language.
+2. Failures are clearer. `patch-file` either finds the exact text once or it fails with a precise error; there is less "maybe this is close enough" behavior.
+3. The conversation model is cleaner. The agent can use `requestTools` to inspect files first, then issue `runTools` for exact changes and validation in the next round.
+
+The most important updated lesson is this: **when the bridge between agent and host becomes fragile, prefer executable tool requests over clever output formats.** A protocol that asks the model to say *what to do* is usually sturdier than one that asks it to emit a compact patch language the host must interpret.
+
+Diffs were still a valuable intermediate step. They reduced token usage and forced a more structured contract. But in practice, explicit tool requests turned out to be the more durable endpoint.
+
 ## Summary of Key Takeaways
 
 After nine iterations, these are the principles I'd carry into any agentic system:
@@ -358,9 +385,10 @@ After nine iterations, these are the principles I'd carry into any agentic syste
 | **Cap your iteration loops** | LLMs improve with feedback, but after 3 failed attempts, change your strategy — don't just retry. |
 | **Let the agent ask for more** | Never assume you've provided enough information upfront. |
 | **Define a protocol, but be resilient** | Structured output formats are essential, but the AI will violate them. Build robust parsers. |
-| **Minimise token waste** | Use diffs, summaries, and deduplication to keep the context window focused. |
+| **Minimise token waste** | Use summaries, targeted context, and compact tool requests to keep the context window focused. |
 | **Delegate validation to the agent** | The AI knows the build system better than a hardcoded checker. |
 | **Minimise the toolset** | Expose only the tools strictly needed. Every additional tool is a security risk and a source of complexity. |
+| **Prefer tool requests over patch protocols** | If diff parsing keeps getting more complex, simplify the contract and let the host execute explicit file operations. |
 | **Use the AI to fix AI failures** | When diff application or parsing fails, ask the AI to resolve it. |
 
 Building agentic systems is an exercise in designing for uncertainty. The AI is powerful but imprecise. Your surrounding infrastructure must be resilient, adaptive, and willing to hand control back to the agent when deterministic approaches fail. The result is a system that is more capable than either part alone.
