@@ -12,19 +12,21 @@ Tom Seidel is a freelance consultant specializing in Java development, cloud-nat
 
 ## Sections
 
-- [Home](https://tomseidel.com/): Overview, about, tech stack, and availability
-- [Projects](https://tomseidel.com/projects/): A curated selection of 30+ project references across automotive, medical technology, telecommunications, and more
-- [Articles](https://tomseidel.com/articles/): Technical articles on Java, cloud-native architecture, DevOps, and software engineering
-- [Atom Feed](https://tomseidel.com/feed.xml): Article feed in Atom format
+- [Home](https://remus-software.org/): Overview, about, tech stack, and availability
+- [Projects](https://remus-software.org/projects/): A curated selection of 30+ project references across automotive, medical technology, telecommunications, and more
+- [Articles](https://remus-software.org/articles/): Technical articles on Java, cloud-native architecture, DevOps, and software engineering
+- [Atom Feed](https://remus-software.org/feed.xml): Article feed in Atom format
 
 ## Articles
 
-- [Running Docker Engine in WSL2 alongside Docker Desktop for Windows](https://tomseidel.com/articles/kb_two_docker/): A practical guide to running both Docker Engine natively in WSL2 and Docker Desktop for Windows in complete isolation — diagnosing conflicts, fixing networking issues, and configuring coexistence.
-- [Building an AI Agent for Code Generation: Lessons from 9 Iterations](https://tomseidel.com/articles/how-to-develop-an-ai-agent/): Practical lessons learned from developing an agentic AI system that generates source code — from naive prompting to a robust, tool-using agent with diff-based updates and dynamic context management.
-- [Restic Explorer 1.0 — A Lightweight Monitoring Dashboard for Restic Backups](https://tomseidel.com/articles/rest-explorer-1-0-released/): Restic Explorer 1.0 is out — a lightweight, self-hosted web dashboard that monitors all restic backup repositories.
-- [From Legacy to Lean: Rethinking Your Backup Strategy](https://tomseidel.com/articles/replacing-veeam-with-restic/): How we replaced a costly, complex backup system with a simple shell script and S3 storage.
-- [Evaluating Self-Hosted AI Services: A Translation Service Case Study](https://tomseidel.com/articles/self-hosted-ai-translation-service/): A practical evaluation of replacing DeepL with a self-hosted translation service using open-source LLMs.
-- [Migrating a Monolith to Microservices: A Practical Guide](https://tomseidel.com/articles/monolith-to-microservices/): A hands-on walkthrough of architectural decisions and patterns for migrating Java monoliths to cloud-native microservices.
+- [Standardizing Agentic AI at Scale: Why Remote MCP Servers Are the Missing Layer](https://remus-software.org/articles/remote-mcp-standardization/): Why organizations should standardize agentic AI with remote MCP server pools to improve consistency, governance, security, and adoption across teams.
+- [Improving Software Quality with Reviewer Personas in AI-Git-Bot](https://remus-software.org/articles/improve-software-quality-with-reviewer-personas/): How to use AI-Git-Bot as a review gateway with multiple specialized reviewer personas to catch security, reliability, performance, testability, and maintainability issues in Git pull requests.
+- [Running Docker Engine in WSL2 alongside Docker Desktop for Windows](https://remus-software.org/articles/kb_two_docker/): A practical guide to running both Docker Engine natively in WSL2 and Docker Desktop for Windows in complete isolation — diagnosing conflicts, fixing networking issues, and configuring coexistence.
+- [Building an AI Agent for Code Generation: Lessons from 9 Iterations](https://remus-software.org/articles/how-to-develop-an-ai-agent/): Practical lessons learned from developing an agentic AI system that generates source code — from naive prompting to a robust, tool-using agent with dynamic context management and explicit tool requests.
+- [Restic Explorer 1.0 — A Lightweight Monitoring Dashboard for Restic Backups](https://remus-software.org/articles/rest-explorer-1-0-released/): Restic Explorer 1.0 is out — a lightweight, self-hosted web dashboard that monitors all restic backup repositories across S3, Azure, SFTP, REST, and Rclone from a single UI with automated scans, integrity checks, and retention policy tracking.
+- [From Legacy to Lean: Rethinking Your Backup Strategy](https://remus-software.org/articles/replacing-veeam-with-restic/): How we replaced a costly, complex backup system with a simple shell script and S3 storage — and the key questions to ask before you do the same.
+- [Evaluating Self-Hosted AI Services: A Translation Service Case Study](https://remus-software.org/articles/self-hosted-ai-translation-service/): A practical evaluation of replacing DeepL with a self-hosted translation service using open-source LLMs — comparing quality, performance, and cost.
+- [Migrating a Monolith to Microservices: A Practical Guide](https://remus-software.org/articles/monolith-to-microservices/): A hands-on walkthrough of the architectural decisions and patterns I use when migrating Java monoliths to cloud-native microservices.
 
 ## Skills & Technologies
 
@@ -42,5 +44,5 @@ Open for freelance and contract work. Remote-first, based in Germany (CET/CEST t
 
 ## Optional
 
-For the full-text version of all content, see: https://tomseidel.com/llms-full.txt
+For the full-text version of all content, see: https://remus-software.org/llms-full.txt
 

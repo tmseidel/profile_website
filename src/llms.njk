@@ -1,0 +1,47 @@
+---
+permalink: /llms.txt
+eleventyExcludeFromCollections: true
+---
+# Tom Seidel - Java Freelancer & Cloud-Native AI Specialist
+
+> Freelance Java consultant with 20+ years of experience in cloud-native architectures, microservices, DevOps, and AI-powered agentic systems. Based in Germany, remote-first.
+
+Tom Seidel is a freelance consultant specializing in Java development, cloud-native architectures, AI integration, and DevOps. He supports projects end-to-end: from initial concept and architecture to production-ready implementation. His focus areas include migrating monolithic systems to scalable microservice architectures, launching new Java-based cloud projects, and building intelligent agentic workflows using LLM APIs (Anthropic, OpenAI, Ollama, llama.cpp).
+
+## Contact
+
+- Email: tom.seidel@remus-software.org
+- LinkedIn: [linkedin.com/in/tomseidel](https://linkedin.com/in/tomseidel)
+- GitHub: [github.com/tmseidel](https://github.com/tmseidel)
+
+## Sections
+
+- [Home]({{ site.url }}/): Overview, about, tech stack, and availability
+- [Projects]({{ site.url }}/projects/): A curated selection of 30+ project references across automotive, medical technology, telecommunications, and more
+- [Articles]({{ site.url }}/articles/): Technical articles on Java, cloud-native architecture, DevOps, and software engineering
+- [Atom Feed]({{ site.url }}/feed.xml): Article feed in Atom format
+
+## Articles
+
+{% for article in collections.articles %}
+- [{{ article.data.title }}]({{ site.url }}{{ article.url }}): {{ article.data.description }}
+{% endfor %}
+
+## Skills & Technologies
+
+Languages: Java, Kotlin, Bash, Python, TypeScript
+AI & LLM: Anthropic API, OpenAI API, Ollama, llama.cpp, Agentic Workflows, Hugging Face
+Frameworks: Spring Boot, Micronaut, OSGi, React
+Cloud Platforms: AWS, Azure, OVH, Hetzner
+DevOps: Docker, Kubernetes, Helm, Terraform, Maven, Ansible
+CI/CD: GitHub Actions, Jenkins, GitLab CI
+Tools & Protocols: Git, REST, gRPC, MQTT, WebSockets, oAuth2
+
+## Availability
+
+Open for freelance and contract work. Remote-first, based in Germany (CET/CEST timezone). Prefers remote work but open to on-site at regular intervals.
+
+## Optional
+
+For the full-text version of all content, see: {{ site.url }}/llms-full.txt
+

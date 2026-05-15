@@ -32,7 +32,6 @@ module.exports = function (eleventyConfig) {
 
   // Pass through static assets
   eleventyConfig.addPassthroughCopy("src/assets");
-  eleventyConfig.addPassthroughCopy({ "src/llms.txt": "llms.txt" });
 
   // Pass through article images (subfolders containing images)
   eleventyConfig.addPassthroughCopy("src/articles/**/*.png");
