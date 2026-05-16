@@ -1,7 +1,7 @@
 ---
 layout: article.njk
-title: "Building an AI Agent for Code Generation: Lessons from 9 Iterations"
-description: "Practical lessons learned from developing an agentic AI system that generates source code — from naive prompting to a robust, tool-using agent with dynamic context management and explicit tool requests."
+title: "Building an AI Agent for Code Generation: Lessons from 13 Iterations"
+description: "Practical lessons learned from developing an agentic AI system that generates source code — from naive prompting to a robust, tool-using agent with a generic loop, schema-validated plans, provider-native function calls, and an optional self-critique step."
 date: 2026-04-07
 tags:
   - articles
@@ -12,7 +12,7 @@ tags:
   - Software Architecture
 ---
 
-Building software with an AI agent at its core is fundamentally different from traditional application development. Over the course of nine iterations, I developed an AI agent that reads GitHub issues, generates implementation code, validates it, and commits the result — all autonomously. This article distils the key lessons learned along the way.
+Building software with an AI agent at its core is fundamentally different from traditional application development. Over the course of thirteen iterations — nine on the agent's behaviour, four more on the surrounding *architecture* of the host — I developed an AI agent that reads GitHub/Gitea issues, generates implementation code, validates it, and commits the result, all autonomously. This article distils the key lessons learned along the way.
 
 ## The Paradigm Shift: Inversion of Control
 
@@ -373,9 +373,204 @@ The most important updated lesson is this: **when the bridge between agent and h
 
 Diffs were still a valuable intermediate step. They reduced token usage and forced a more structured contract. But in practice, explicit tool requests turned out to be the more durable endpoint.
 
+## Iteration 10 — From a Hand-Wired Loop to a Generic Agent Loop with Strategies
+
+By the time we had a second agent in the system — one that turns vague user reports into well-formed issues, alongside the original code-generating one — the original implementation loop had been copy-pasted, renamed, and quietly diverged. Both loops did almost the same thing:
+
+- bump a round counter and check budgets,
+- mirror every message into the persisted session *and* into an in-memory list,
+- call the AI with `(history, message, systemPrompt, modelOverride, maxTokens)`,
+- parse the response into a plan,
+- branch on "context request" vs. "tool run" vs. "final",
+- and call back into the agent-specific finisher.
+
+The divergences were the dangerous part. One loop carried an `attempt--` hack that decremented the validation counter whenever the AI asked for more context, "because context lookups shouldn't burn an implementation attempt." The other had a different off-by-one on the same idea. Neither could be reasoned about without reading the surrounding 200 lines.
+
+### The refactor
+
+Instead of designing the new loop top-down, we started bottom-up by *characterising* the existing one. Several new tests pinned three branch combinations that nobody dared touch: multi-round validation retry, the "ignore non-blocking tool failures after a successful build" policy, and the "file-only success without any validation tool" path. Only with those tests green did we extract:
+
+- a generic loop class that owns rounds, history mirroring, and the AI call,
+- a sealed `StepDecision` type with exactly two cases (`Continue(nextMessage)` / `Finish(outcome)`) that the strategy returns each round,
+- a small `Strategy` interface with `systemPrompt()`, `step(ctx, aiResponse, round)`, and `onBudgetExhausted(ctx)`,
+- an immutable `Budget(maxRounds, maxContextRounds, maxValidationRetries, maxTokensPerCall)` value object,
+- and a `RunContext` carrying per-run mutable state (the workspace, the current base branch, the issue identifier — whatever the agent needs to know).
+
+The `attempt--` hack was deleted. Context-fetch rounds and implementation attempts now use *separate* counters in the strategy. The session/history double-bookkeeping disappeared into the loop, where it belongs.
+
+```mermaid
+flowchart TD
+    A["loop.run()"] --> B["ai.chat() / ai.chatWithTools()"]
+    B --> C["strategy.step(ctx, response, round)"]
+    C -->|Continue| A
+    C -->|Finish| D[strategy-specific finisher]
+    A -. budget exhausted .-> E[strategy.onBudgetExhausted]
+```
+
+### Lesson
+
+> Don't refactor what you cannot reproduce. Characterisation tests are the cheapest possible insurance policy when ripping apart a loop full of off-by-one tricks.
+
+The second, subtler lesson surfaced months later: a sealed `StepDecision` interface forces every new control-flow case to opt in. We later considered adding an `Abort(reason)` variant for Iteration 13's critic step — and the compiler immediately pointed at every `switch` that would need updating. The exhaustiveness check turned the loop from a behavioural surprise generator into something *typed*. That alone justified the refactor.
+
+## Iteration 11 — Schema Validation: Trust, but Verify (Quietly)
+
+The output protocol from Iteration 5 onwards was JSON-in-prompt. We documented its shape in the system prompt, deserialised it with a standard JSON library, and patched up violations in a thicket of helpers — extract-the-JSON-from-the-fenced-block (four strategies), truncate-to-first-balanced-object, repair-truncated-JSON, sanitise-invalid-escapes, find-the-last-complete-tool-call. The pile grew with every new model we tested.
+
+The real cost was not the helpers themselves but the *invisibility* of their work. We had no idea how often the AI actually violated the contract — and which fields it got wrong most often. The agent might be quietly recovering from 30 % schema violations and we wouldn't know.
+
+### What we built
+
+- **JSON-Schema documents** (Draft 2020-12) for every plan shape the AI is allowed to return. They accept the de-facto aliases the models had already invented (`requestedFiles` next to `requestFiles`, singular `runTool` next to plural `runTools[]`) via `oneOf`, because legacy responses must remain valid.
+- A **validator component** that runs *after* the existing extract/repair pipeline and *before* deserialisation.
+- A **counter** like `agent.plan.schema_violations_total{agent=...}` exposed on the metrics endpoint.
+- A **feature flag** `agent.schema.enforce` (default `false`).
+- **Snapshot tests** against real captured AI responses, plus a couple of deliberately broken negatives.
+
+The key design decision: in the default mode, **the validator does not change behaviour at all.** It logs the violation, increments the counter, and lets the existing repair heuristics do their job. The whole layer is observational.
+
+### Lesson
+
+> Adding a strict validator next to a forgiving parser is *not* a contradiction. Run them in parallel for a release or two, measure how often the strict layer would have rejected, and only then decide whether to flip enforcement on.
+
+This is the boring-but-correct path. We did not "delete the messy parser and replace it with the proper one" — that would have broken production the same day. We added a measurement and waited.
+
+A second lesson, hidden in the implementation: the schemas turned out to be reusable. In Iteration 12 we needed a JSON-Schema for each tool the agent can call. We already had two well-tested plan schemas to learn from.
+
+## Iteration 12 — Provider-Native Function Calling (Without Burning the Bridges)
+
+All four major LLM providers we support now expose first-class tool calling. The provider parses the model's tool-call intent server-side and hands you a structured `{ name, arguments }` object. No JSON-in-prompt, no fenced code blocks, no fuzzy extraction.
+
+We had wanted to use this from the start. We could not, because:
+
+1. Not every model supports it (older fine-tunes, certain self-hosted setups, raw-completion endpoints).
+2. Switching providers mid-flight would have invalidated months of accumulated prompt engineering.
+3. Operators of an existing deployment may have a strong reason — model choice, cost, debuggability — to stay on the legacy path even on providers that *do* support tools.
+
+So the design constraint was firm: native function calling had to be **opt-out per provider configuration**, with the JSON-in-prompt path remaining fully functional and fully tested.
+
+### The contract changes
+
+```java
+record ChatTurn(String assistantText, List<ToolCall> toolCalls, StopReason stop) {}
+record ToolCall(String id, String name, JsonNode args) {}
+record ToolDescriptor(String name, String description, JsonNode jsonSchema) {}
+
+interface AiClient {
+    String chat(List<Message> history, String msg, String sys, String model, int maxTokens);
+
+    // default delegates to chat(), so non-native clients work unchanged
+    default ChatTurn chatWithTools(List<Message> history, String msg,
+                                   List<ToolDescriptor> tools,
+                                   String sys, String model, int maxTokens) {
+        return ChatTurn.text(chat(history, msg, sys, model, maxTokens));
+    }
+
+    default boolean supportsNativeTools() { return false; }
+}
+```
+
+Three things make this work:
+
+- **The default method shields old clients.** Anything that hasn't been migrated keeps its plain-text `chat()` semantics, even when the loop asks for tools. No big-bang client rewrite.
+- **A shared helper** wraps a `chat()` call into a `ChatTurn`. Every native client uses it as its fallback when the operator-level kill switch is set.
+- **The loop triple-gates the native path:** the strategy must prefer `NATIVE`, the client must report `supportsNativeTools() == true`, *and* the strategy must actually expose at least one `ToolDescriptor`. Any missing condition falls back to the legacy path, with the reason logged.
+
+### A per-configuration kill switch
+
+A `useLegacyToolCalling` flag was added to the AI-provider configuration record. The admin UI got a switch with a popover explaining both modes:
+
+> *"Native tool calls give the model a structured tools API and are the recommended default. Disable this if you observe parse failures with a specific model or want to keep using the prompt-engineered protocol."*
+
+When the operator flips the switch, the client is reconstructed with native mode disabled, so `chatWithTools(...)` quietly returns a `ChatTurn.text(...)` and the legacy text path runs end-to-end — without any change to the agent code above it.
+
+### Telemetry that finally tells the truth
+
+Three metrics were added:
+
+| Metric | Tags | What it measures |
+|---|---|---|
+| `agent.tool_call.mode_total` | `mode={native,legacy}`, `provider` | One increment per AI round. Lets us see migration progress per provider. |
+| `agent.tool_call.parse_failures_total` | `provider` | Where the model defied the protocol. |
+| `agent.tool_call.latency_seconds` | `mode`, `provider` | Wall-clock per AI round. |
+
+The first metric matters more than it looks. The single hardest question in this kind of migration is "are we *actually* on the new path, or are we silently falling back?" A simple count per mode answers that without instrumenting the loop further.
+
+### Lesson
+
+> When you change a contract that several providers must implement, give the interface a default method that preserves the old behaviour. Then add the new behaviour as an opt-in capability, with telemetry from day one. Migrating providers becomes a measurable, reversible operation instead of a big bang.
+
+A related, second-order lesson: the schemas from Iteration 11 were exactly the right artefact to hand to the providers' tool-call APIs. The investment in a stricter protocol paid off precisely when we no longer needed the loose one.
+
+## Iteration 13 — Persisted State, Consolidated Budgets, and an Optional Critic
+
+The final iteration is really three small refactors that share a theme: the agent had grown subtle bugs from *implicit* state. Each fix replaces an inference-from-history with an explicit, persisted value.
+
+### 13a. Persisting the last plan instead of replaying history
+
+The old "get the last plan" helper walked the conversation backwards, calling the JSON parser on every `assistant` message until one returned non-null. It was used in three places — the PR body, the follow-up comment, and the critic step we were about to add. It had three problems:
+
+- **Performance.** Long sessions re-parsed dozens of messages per call.
+- **Inconsistency.** If the plan format evolved between runs, an older message would parse differently than a fresh one would.
+- **Brittleness in tests.** "The last plan" depended on the exact mock of the history accessor, leading to several hours of debugging "why does this test see an empty plan?".
+
+The fix is unglamorous: three new columns on the session table (`last_plan_summary`, `last_plan_json`, `last_plan_at`), a `recordPlan(...)` method on the session service, and a single call in the strategy right after the response is parsed successfully. Downstream readers now hit the row in O(1). The history walk survives as a fallback for sessions that pre-date the migration.
+
+> **Lesson:** If you find yourself re-deriving the same fact from history three times in three places, persist the fact. The history is for *audit*, not for *lookup*.
+
+### 13b. One budget config to rule them all
+
+Before this iteration, the agent had at least seven overlapping limits scattered across three places: separate validation retries, max tool executions, a hard-coded `MAX_CONTEXT_TOOL_REQUESTS = 5` constant, separate writer-specific knobs, a hard-coded `fileRequestRounds < 3` literal in the loop, and a legacy `maxTokens` setting. Each one was set somewhere different and meant something subtly different.
+
+The new `BudgetConfig` collapses these into five named knobs with sensible defaults: `maxRounds = 10`, `maxContextRounds = 3`, `maxValidationRetries = 3`, `maxContextToolRequestsPerRound = 5`, `maxTokensPerCall = 16384`. The deprecated fields stay on the config object for backwards compatibility, but a constructor hook copies them into the new struct whenever its values are still at the defaults — so an operator who customised `agent.max-tokens=8192` in their YAML keeps that value, without ever touching the new property.
+
+> **Lesson:** When the operator-visible configuration drifts from the model the code actually uses, add a migration *inside* the config class. A post-construct hook (in your framework's equivalent) is the cheapest possible adapter and keeps the documentation honest.
+
+### 13c. An optional Critic / Reflection step
+
+The last addition is intentionally small, and intentionally off by default. It is inspired by the "Self-Refine" / "Reflexion" family of prompting techniques: after the implementation has passed validation, ask a *second* LLM call to read the diff and answer one question — *does this change actually address the issue?*
+
+The contract is a three-valued return:
+
+```json
+{"outcome": "APPROVE" | "ITERATE" | "ABORT", "feedback": "short, actionable text"}
+```
+
+- `APPROVE` proceeds to commit and PR creation, unchanged.
+- `ITERATE` posts the critic's feedback back to the issue and resets the session to "waiting for the user to ping the bot". (We deliberately did *not* feed the feedback back into the same loop. That door is open, but it has subtle failure modes — a critic that keeps demanding "more tests" can lock the loop in an unproductive cycle.)
+- `ABORT` aborts the PR creation entirely, posts the reason as a comment, and marks the session as failed.
+
+There is also a hidden fourth outcome, `SKIPPED`, emitted whenever the feature is disabled (the default). It exists purely so the metric `agent.critic.outcome_total{outcome=…}` makes the off-state visible — *zero* additional LLM calls per implementation, but a non-zero count of `SKIPPED` increments.
+
+```yaml
+agent:
+  critic:
+    enabled: false                       # opt-in
+    max-iterations: 1
+    require-approval-for: [LARGE_DIFF]   # informational, future trigger
+```
+
+The most important property of this design is what it *does not do* in the default configuration: it makes no extra AI call, allocates no extra tokens, and adds no latency. A unit test asserts exactly that — "when disabled, the AI client is never called".
+
+### Lesson
+
+> A useful self-critique step is one that costs nothing when disabled, that always fails open in the face of unparseable AI output, and that publishes its outcome as a first-class metric. Reflection is powerful, but a critic that blocks PRs when the network blips is worse than no critic at all.
+
+The pragmatic policy we settled on: parse failure → APPROVE. AI exception → APPROVE. Empty response → APPROVE. The only paths that can stop a PR are an *explicit* `ITERATE` or `ABORT` with a well-formed JSON body. The metric tags (`approve`, `iterate`, `abort`, `skipped`, `error`, `parse_error`) make every fail-open visible to operators.
+
+---
+
+## Reflecting on the Architectural Iterations
+
+Iterations 10–13 are different in flavour from 1–9. The early iterations were about *what the agent does*; the later ones are about *the shape of the host that contains it*. Three patterns kept recurring:
+
+1. **Sealed types beat strings.** Replacing string-based control flow (`if (response.contains("requestFiles"))`) with a sealed `StepDecision` and a handful of records gave the compiler enough visibility to catch every new branch. Native function calling's `StopReason` enum did the same job for provider responses.
+2. **Default methods are the migration tool nobody talks about.** Both Iteration 12's `chatWithTools` rollout and Iteration 13b's budget migration leaned on the same idiom: an interface with a default implementation, or a config object with a post-construct hook that bridges old fields to new. Both were strictly additive. Neither broke a single existing call site.
+3. **A metric is the entry ticket for a feature flag.** Every flag we added — schema enforcement, native tool calling, the critic — landed together with a counter that distinguishes "the flag is on" from "the flag is doing work". Without that, "we have schema validation now" is a press release. With it, it's an operations capability.
+
 ## Summary of Key Takeaways
 
-After nine iterations, these are the principles I'd carry into any agentic system:
+After thirteen iterations — nine on the agent's behaviour, four on the architecture around it — these are the principles I'd carry into any agentic system:
 
 | Principle | Detail |
 |---|---|
@@ -390,6 +585,11 @@ After nine iterations, these are the principles I'd carry into any agentic syste
 | **Minimise the toolset** | Expose only the tools strictly needed. Every additional tool is a security risk and a source of complexity. |
 | **Prefer tool requests over patch protocols** | If diff parsing keeps getting more complex, simplify the contract and let the host execute explicit file operations. |
 | **Use the AI to fix AI failures** | When diff application or parsing fails, ask the AI to resolve it. |
+| **Don't refactor what you can't reproduce** | Characterisation tests before invasive loop changes. Sealed `StepDecision` types beat string-based control flow. |
+| **Add the strict layer next to the lenient one** | Run schema validation in parallel with the repair heuristics first. Flip enforcement only after measuring violation rates in production. |
+| **Migrate via default methods, not big bangs** | Interface defaults (`chatWithTools` delegating to `chat`) and `@PostConstruct` config bridges let you ship the new contract without breaking the old one. |
+| **A flag without a metric is a press release** | Every feature toggle ships with a Prometheus counter that distinguishes "on" from "doing work". |
+| **Fail open on optional critique** | A self-critic that blocks PRs on a parse error or network blip is worse than no critic. APPROVE on uncertainty; only block on explicit, well-formed `ITERATE` / `ABORT`. |
 
 Building agentic systems is an exercise in designing for uncertainty. The AI is powerful but imprecise. Your surrounding infrastructure must be resilient, adaptive, and willing to hand control back to the agent when deterministic approaches fail. The result is a system that is more capable than either part alone.
 

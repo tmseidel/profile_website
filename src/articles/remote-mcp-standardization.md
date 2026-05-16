@@ -40,6 +40,35 @@ This variance has three compounding consequences that directly impact the busine
 
 ---
 
+## Where the MCP Ecosystem Stands Today: A Protocol Snapshot
+
+Before making the case for remote MCP, it is worth grounding the discussion in where the ecosystem actually is — because the data tells a revealing story about the gap between where things are and where they need to go.
+
+As of early 2026, the distribution of publicly registered MCP servers by transport protocol breaks down as follows — based on aggregated data from Anthropic, OpenAI, and analyst surveys published Q4 2025 through Q1 2026, as compiled by [Digital Applied (April 2026)](https://www.digitalapplied.com/blog/mcp-adoption-statistics-2026-model-context-protocol):
+
+| Transport | Share | Status |
+|---|---|---|
+| **stdio** | ~67 % | Local subprocess — runs on the client machine |
+| **Streamable HTTP** | ~28 % | Remote, OAuth 2.1-secured — the current standard |
+| **SSE** (legacy) | ~5 % | Remote, deprecated — being phased out |
+
+```mermaid
+pie title MCP Server Distribution by Transport Protocol (2026)
+    "stdio (local)" : 67
+    "Streamable HTTP (remote)" : 28
+    "SSE legacy (remote)" : 5
+```
+
+Two-thirds of all MCP servers currently run locally via stdio. This is a direct artifact of how MCP adoption began: developers building quick local integrations for their own AI clients, spinning up tools as subprocesses, storing credentials in environment variables. It was the fastest path to a working prototype — and it shows.
+
+The more important number, however, is the **trend**. Remote MCP deployments have grown nearly fourfold since May 2025. Among the 20 most widely used MCP servers, 80 % now offer a remote deployment option — a figure independently confirmed by MCP Manager via Ahrefs search-volume data ([MCP Manager, October 2025](https://mcpmanager.ai/blog/mcp-adoption-statistics/)). And of those remote servers, 81 % authenticate via OAuth 2.1 — meaning the governance infrastructure is already being built at the ecosystem level.
+
+The market is moving toward remote. The question for organizations is whether they lead that shift deliberately — with centralized governance, versioning, and access control — or whether they arrive there reactively, having accumulated the same local-config debt that once plagued their microservices era.
+
+> **The 67 % stdio figure is not a benchmark to maintain — it is a starting point to move away from.**
+
+---
+
 ## The Architectural Shift: From Local Chaos to a Shared MCP Resource Pool
 
 The solution mirrors a pattern mature engineering organizations have known for decades: **centralize what should be consistent, and expose it through a well-governed interface**.

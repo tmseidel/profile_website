@@ -1,5 +1,29 @@
 [
   {
+    "title": "Implementation of AI supported processes in the context of software development",
+    "description": "Implementation of AI supported processes in the context of software development. This includes the analysis of software development processes and the identification of potential areas for AI support, the design and implementation of AI-based solutions, and the evaluation of their effectiveness. Focus on self-hosted AI solutions and integration with existing development tools and platforms.",
+    "industry": "Information Technology",
+    "technologies": ["Open-WebUI", "llama.cpp", "Ollama", "Ansible", "Document-processing AI", "Model Context Protocol (MCP)"],
+    "role": "AI Consultant, System Architect",
+    "period": "April 2026 – present"
+  },
+  {
+    "title": "OpenSource AI Agentic Code Review Bot",
+    "description": "Development of an open-source AI agentic code review bot. The bot connects Git platforms with AI providers for pull-request code reviews, interactive PR conversations, autonomous issue implementation, and technical-writing issue refinement. Github: https://github.com/tmseidel/ai-git-bot",
+    "industry": "Information Technology",
+    "technologies": ["Java","Spring Boot", "Docker", "PostgreSQL", "Anthropic Claude", "OpenAI", "Google Gemini", "Ollama", "llama.cpp"],
+    "role": "System Architect, Backend Developer",
+    "period": "March 2026 – present"
+  },
+  {
+    "title": "IOT Edge Device for medical devices",
+    "description": "System-Design & Development of an IOT Edge Device for medical devices. The device collects data from medical devices, processes it locally and securely transmits it to the cloud for further analysis and monitoring.",
+    "industry": "Medical Technology",
+    "technologies": ["Java","Spring Boot", "REST", "Docker", "Grafana", "Thingsboard"],
+    "role": "System Architect, Backend Developer",
+    "period": "July 2025 – present"
+  },
+  {
     "title": "Vehicle Diagnostic Application for High-Voltage Battery Assessment",
     "description": "Development of a vehicle diagnostic application for assessing high-voltage batteries in electric vehicles.",
     "industry": "Automotive",

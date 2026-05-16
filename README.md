@@ -13,7 +13,7 @@ A static website for Tom Seidel's freelancer profile, built with [Eleventy (11ty
 - **Ansible deployment** script for easy server deployment
 - **SEO optimized**: sitemap.xml, robots.txt, canonical URLs, Open Graph & Twitter Card meta tags, JSON-LD structured data (Person + BlogPosting schemas)
 - **Atom feed** (`/feed.xml`) for RSS readers and search-engine article discovery
-- **AI-crawler friendly**: `llms.txt` and auto-generated `llms-full.txt` following the [llmstxt.org](https://llmstxt.org/) standard, plus explicit `Allow` directives for known AI bots in robots.txt
+- **AI-crawler friendly**: auto-generated `llms.txt` and `llms-full.txt` following the [llmstxt.org](https://llmstxt.org/) standard, plus explicit `Allow` directives for known AI bots in robots.txt
 
 ## Project Structure
 
@@ -38,7 +38,7 @@ profile_website/
 │   ├── feed.njk            # Atom feed template (/feed.xml)
 │   ├── sitemap.njk         # Sitemap template (/sitemap.xml)
 │   ├── robots.njk          # robots.txt template
-│   ├── llms.txt            # LLM-friendly summary (llmstxt.org)
+│   ├── llms.njk            # LLM-friendly summary template (/llms.txt)
 │   └── llms-full.njk       # Auto-generated full-content LLM file
 ├── deploy/
 │   ├── .env.example        # Environment variables template (copy to .env)
