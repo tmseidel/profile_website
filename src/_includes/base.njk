@@ -5,6 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   {% set pageTitle %}{% if title %}{{ title }} | {{ site.name }}{% else %}{{ site.name }} – {{ site.author.jobTitle }}{% endif %}{% endset %}
   {% set pageDescription %}{% if description %}{{ description }}{% else %}{{ site.description }}{% endif %}{% endset %}
+  {% set pageImagePath %}{% if image %}{{ image }}{% else %}/assets/images/cv2.png{% endif %}{% endset %}
+  {% set pageImageAlt %}{% if imageAlt %}{{ imageAlt }}{% elif title %}{{ title }}{% else %}{{ site.author.name }}{% endif %}{% endset %}
   <title>{{ pageTitle | safe }}</title>
   <meta name="description" content="{{ pageDescription | safe }}" />
   <meta name="author" content="{{ site.author.name }}" />
@@ -18,8 +20,8 @@
   <meta property="og:url" content="{{ site.url }}{{ page.url }}" />
   <meta property="og:site_name" content="{{ site.name }}" />
   <meta property="og:locale" content="{{ site.language }}" />
-  <meta property="og:image" content="{{ site.url }}/assets/images/cv2.png" />
-  <meta property="og:image:alt" content="{{ site.author.name }}" />
+  <meta property="og:image" content="{{ site.url }}{{ pageImagePath | trim }}" />
+  <meta property="og:image:alt" content="{{ pageImageAlt | safe }}" />
   {% if layout == 'article.njk' %}
   <meta property="article:author" content="{{ site.author.name }}" />
   <meta property="article:published_time" content="{{ date | dateISOString }}" />
@@ -30,7 +32,7 @@
   <meta name="twitter:card" content="summary" />
   <meta name="twitter:title" content="{{ pageTitle | safe }}" />
   <meta name="twitter:description" content="{{ pageDescription | safe }}" />
-  <meta name="twitter:image" content="{{ site.url }}/assets/images/cv2.png" />
+  <meta name="twitter:image" content="{{ site.url }}{{ pageImagePath | trim }}" />
   <!-- JSON-LD Structured Data -->
   {% if layout == 'article.njk' %}
   <script type="application/ld+json">
@@ -42,7 +44,7 @@
     "datePublished": "{{ date | dateISOString }}",
     "dateModified": "{{ date | dateISOString }}",
     "url": "{{ site.url }}{{ page.url }}",
-    "image": "{{ site.url }}/assets/images/cv2.png",
+    "image": "{{ site.url }}{{ pageImagePath | trim }}",
     "author": {
       "@type": "Person",
       "name": "{{ site.author.name | safe }}",

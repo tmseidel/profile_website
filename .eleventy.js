@@ -35,6 +35,7 @@ module.exports = function (eleventyConfig) {
 
   // Pass through article images (subfolders containing images)
   eleventyConfig.addPassthroughCopy("src/articles/**/*.png");
+  eleventyConfig.addPassthroughCopy("src/articles/**/*.PNG");
   eleventyConfig.addPassthroughCopy("src/articles/**/*.jpg");
   eleventyConfig.addPassthroughCopy("src/articles/**/*.jpeg");
   eleventyConfig.addPassthroughCopy("src/articles/**/*.gif");
