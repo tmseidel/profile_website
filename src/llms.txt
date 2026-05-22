@@ -19,6 +19,7 @@ Tom Seidel is a freelance consultant specializing in Java development, cloud-nat
 
 ## Articles
 
+- [Sovereign AI Is Loud — But The Real Issue Is Sovereign IT](https://remus-software.org/articles/regarding-sovereign-it/): Why the debate about sovereign AI is really a broader discussion about sovereign IT — control over infrastructure, platforms, portability, and the long-term ability to make and reverse technical decisions.
 - [Meet AI-Git-Bot 1.7 — the teammate that reviews, tests and ships your PRs](https://remus-software.org/articles/meet-ai-git-bot-the-teammate-that-review-ships-test-prs/): AI-Git-Bot 1.7 is here, transforming from 'the PR review bot' to the AI teammate your repo has been waiting for — reviewing your code, writing your tests, deploying your previews, cleaning up after itself. The chores that always get cut under deadline pressure? Wire one bot. They get done. Every PR. Forever.
 - [Standardizing Agentic AI at Scale: Why Remote MCP Servers Are the Missing Layer](https://remus-software.org/articles/remote-mcp-standardization/): Why organizations should standardize agentic AI with remote MCP server pools to improve consistency, governance, security, and adoption across teams.
 - [Improving Software Quality with Reviewer Personas in AI-Git-Bot](https://remus-software.org/articles/improve-software-quality-with-reviewer-personas/): How to use AI-Git-Bot as a review gateway with multiple specialized reviewer personas to catch security, reliability, performance, testability, and maintainability issues in Git pull requests.
