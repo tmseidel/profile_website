@@ -19,6 +19,7 @@ Tom Seidel is a freelance consultant specializing in Java development, cloud-nat
 
 ## Articles
 
+- [From Qwen3-32B to Qwen3.6-35B-A3B: Upgrading a Local Inference Stack on 2× RTX 5060 Ti](https://remus-software.org/articles/qwen3-to-qwen36-upgrade/): A dense-to-sparse model swap that nearly doubled token throughput, improved output quality, and taught us a few things about vLLM with MoE and Mamba architectures.
 - [Sovereign AI Is Loud — But The Real Issue Is Sovereign IT](https://remus-software.org/articles/regarding-sovereign-it/): Why the debate about sovereign AI is really a broader discussion about sovereign IT — control over infrastructure, platforms, portability, and the long-term ability to make and reverse technical decisions.
 - [Meet AI-Git-Bot 1.7 — the teammate that reviews, tests and ships your PRs](https://remus-software.org/articles/meet-ai-git-bot-the-teammate-that-review-ships-test-prs/): AI-Git-Bot 1.7 is here, transforming from 'the PR review bot' to the AI teammate your repo has been waiting for — reviewing your code, writing your tests, deploying your previews, cleaning up after itself. The chores that always get cut under deadline pressure? Wire one bot. They get done. Every PR. Forever.
 - [Standardizing Agentic AI at Scale: Why Remote MCP Servers Are the Missing Layer](https://remus-software.org/articles/remote-mcp-standardization/): Why organizations should standardize agentic AI with remote MCP server pools to improve consistency, governance, security, and adoption across teams.
