@@ -435,7 +435,7 @@ For now, the four-layer strategy with LLM-assisted summarization keeps local age
 
 **Further reading:**
 
-- [Lost in the Middle: How Language Models Use Long Contexts](https://arxiv.org/abs/2307.03172) — Research on attention patterns in long prompts
+- [Lost in the Middle: How Language Models Use Long Contexts](https://cs.stanford.edu/~nfliu/papers/lost-in-the-middle.tacl2023.pdf) — Research on attention patterns in long prompts
 - [vLLM Configuration Options](https://docs.vllm.ai/en/latest/configuration/) — How inference servers handle context memory
 - [Ollama FAQ: Context Window Configuration](https://docs.ollama.com/faq) — Setting up local models with appropriate windows
 - [Claude Context Windows Documentation](https://platform.claude.com/docs/en/build-with-claude/context-windows) — How cloud providers handle large contexts
