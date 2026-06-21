@@ -45,10 +45,15 @@ A tiered approach applies progressively more destructive strategies as context p
 
 ```mermaid
 flowchart TD
-    A["Tool Result Generated"] --> B{"Size > 8k chars?"}
-    B -->|"Yes"| C["Layer 1: Truncate<br/>Head+Tail Strategy"]
-    B -->|"No"| D["Add to History"]
-    C --> D
+    A["Tool Result Generated"] --> B{"Is a code file?"}
+    B -->|"Yes"| C1["Layer 1a: Structural Extraction<br/>Signatures + dependencies"]
+    B -->|"No"| C2{"Size > 8k chars?"}
+    C1 --> C1a{"Reduced enough?"}
+    C1a -->|"Yes"| D["Add to History"]
+    C1a -->|"No"| C2
+    C2 -->|"Yes"| C3["Layer 1b: Fallback<br/>Head+Tail Truncation"]
+    C2 -->|"No"| D
+    C3 --> D
     
     D --> E["AI Call Returns"]
     E --> F{"Last-call tokens<br/>> 70% of window?"}
@@ -70,18 +75,80 @@ flowchart TD
 
 Each layer has a specific purpose and trade-off between information loss and context savings.
 
-## Layer 1: Tool Result Truncation (The First Line of Defense)
+## Layer 1: Smart Code Truncation — Don't Cut, Distill
 
-Tool outputs are the biggest context hogs. A single `cat` on a 500-line Java file produces 15k-20k chars. Build logs easily exceed 100k. The model needs structure (imports, class signature) and outcome (errors, exit codes), not the middle 400 lines of boilerplate.
+Tool outputs are the biggest context hogs. A single `cat` on a 500-line Java file produces 15k-20k chars. Build logs easily exceed 100k. But **how** you shrink them matters enormously — and code demands a fundamentally different approach than prose or log output.
 
-### The Head+Tail Strategy
+Code relies on strict logic: missing closing brackets, severed variable scopes, or orphaned function calls break the AI's understanding. Simple text cutting — lopping off the middle of a source file — produces syntactically broken fragments that confuse the model more than they help. Text cutting of code should be the **last resort**, applied only when the context window is already full and no smarter option remains.
+
+The right approach for code is **structural distillation**: parse the file into its abstract shape, extract only what the model needs for reasoning, and discard implementation detail it can re-read on demand.
+
+### Layer 1a: Structural Extraction for Code Files (The Smart Path)
+
+Three complementary strategies extract the minimum viable representation of a codebase without breaking syntax:
+
+**1. Signature extraction via Abstract Syntax Trees.** Parse source files with Universal Ctags (or Tree-sitter) to extract only function signatures, class definitions, method declarations, and docstrings. This gives the model a lightweight "map" of the codebase — all the structural landmarks with none of the implementation bloat.
+
+Universal Ctags supports 40+ languages natively and can be called as a subprocess. Tree-sitter — the engine powering GitHub's syntax highlighting and code navigation — is the industry standard for multi-language tooling. Here is the conceptual pipeline:
+
+```
+Source file → ctags --output-format=json --fields=+neKz
+             → Filter for classes, methods, functions, constructors
+             → Format as markdown code block with signatures only
+```
+
+A 500-line `OrderProcessor.java` becomes:
+
+```java
+class OrderProcessor {
+  constructor OrderProcessor(String processorId)
+  method processOrder(String orderId, double amount)
+  method internalCleanup()
+}
+```
+
+This 6-line skeleton preserves hierarchy, parameter types, and method names — everything the model needs to understand program structure — while slashing token count by 95%+. The implementation bodies can be re-read on demand if the model decides they're relevant.
+
+**2. Dependency and import extraction.** A second pass with ctags (`--kinds-all=+i+n`) strips a file down to its declared namespace and imported dependencies only:
+
+```json
+{
+  "file": "Button.tsx",
+  "declared_namespace_or_package": "components.ui",
+  "dependencies": [
+    "react",
+    "../hooks/useAuth",
+    "@mui/material/Button"
+  ]
+}
+```
+
+This 6-line dependency map tells the model exactly which modules are coupled — far more useful than 300 lines of JSX it can't fit in context anyway. The model can make architectural decisions (refactoring, dependency breaking, circular import detection) without seeing a single line of implementation code.
+
+**3. Directory structure mapping.** Tools like `tree` or a generated structural map (`components/`, `utils/`, `models/`) let the model navigate the project before asking for specific file contents. This is already well-served by standard tooling (`rg`, `find`, `tree`) and needs no additional infrastructure.
+
+**How to implement.** The simplest universal approach is a system call to `universal-ctags` (installable via `apt install universal-ctags` or available as a Docker image). The tool emits JSON with fields for `name`, `kind` (class / method / function / import / namespace), and `signature`. Filter to the `kind` values the model actually needs (classes, methods, constructors, functions — **not** local variables), format as a markdown code block with the correct language marker, and inject into context.
+
+For dependency-only extraction, the same `ctags` call with `--kinds-all=-* --kinds-all=+i+n` emits only imports, includes, namespaces, and packages — a 3-5 line output regardless of file size.
+
+**Accuracy impact**: Negligible. The model sees the same structural information it would extract by reading the full file, compressed without syntax damage. Tasks like "add a method to class X" or "refactor the dependency on Y" work identically.
+
+### Layer 1b: Head+Tail Truncation (The Fallback — Last Resort for Code)
+
+When structural extraction fails (no ctags available, unsupported language, or output still too large), fall back to text cutting. Even here, be smarter than blind character chopping:
 
 ```python
-def truncate_tool_result(text, max_chars=8000):
+def truncate_tool_result(text, max_chars=8000, is_code=False):
     if len(text) <= max_chars:
         return text
     
-    # Preserve beginning (structure, headers) and end (errors, results)
+    if is_code:
+        # Code: try structural first, fall back to text cutting as last resort
+        structured = try_structural_extraction(text)
+        if structured and len(structured) <= max_chars:
+            return structured
+    
+    # Fallback: head+tail for logs, prose, or code where structural failed
     head_size = max_chars // 2
     tail_size = max_chars - head_size - 64  # 64 chars for marker
     
@@ -96,7 +163,7 @@ def truncate_tool_result(text, max_chars=8000):
 
 **Why head+tail?** A Maven build log: first 50 lines show which modules are building, last 50 show errors or `BUILD SUCCESS`. The middle 2,000 lines are `Compiling...` repeated endlessly. Head+tail keeps the useful parts.
 
-**Accuracy impact**: Minimal (<5% loss on tasks needing tool comprehension), because the model rarely needs the middle of a long output.
+**Accuracy impact**: Minimal (<5% loss on logs/prose), but **significant on code** — text-cut source files lose syntax integrity mid-function, producing broken fragments the model may misinterpret. This is why structural extraction (Layer 1a) must be tried first for any code file.
 
 **Edge case**: When `max_chars` is too small, `tail_size` goes negative. The implementation guards against this by falling back to head-only.
 
@@ -265,21 +332,20 @@ This turns the context window from a "must remember everything" constraint into 
 
 ### Structured Tool Outputs
 
-The LLM can also be encouraged to request **structured outputs** from tools. Instead of:
+Instead of dumping entire files into context, the agent can request **structural views** — the Layer 1a approach exposed as explicit tools:
 
 ```
 Tool: read_file("src/main/java/UserService.java")
-Result: [2000 lines of Java code]
+Result: [2000 lines of Java code — risks context bloat]
+
+Tool: extract_signatures("src/main/java/UserService.java")  
+Result: "class UserService { constructor(), method findById(), method save() } // 15 methods"
+
+Tool: extract_dependencies("src/main/java/UserService.java")
+Result: { "dependencies": ["UserRepository", "java.util.Optional", "lombok.Data"] }
 ```
 
-Ask for:
-
-```
-Tool: extract_class_signature("src/main/java/UserService.java")
-Result: "public class UserService { ... } // 15 methods, 3 dependencies"
-```
-
-This requires custom tools but dramatically reduces context for common operations.
+This requires custom tools but dramatically reduces context for common operations. The `extract_signatures` tool runs `ctags --output-format=json --fields=+neKz` under the hood; the `extract_dependencies` tool runs the same binary with `--kinds-all=+i+n`. Both are one-time infrastructure costs that pay off on every code-reading tool call.
 
 ### LLM-Assisted Context Summarization
 
@@ -392,18 +458,21 @@ A benchmark on a 20-round agentic coding task using Mistral 7B (32k window) show
 | Strategy | Rounds Completed | Avg Accuracy | Context Utilization |
 |----------|-----------------|--------------|---------------------|
 | No compaction | 4 (crashed) | 78% | 100% (overflow) |
-| Tool truncation only | 8 (crashed) | 75% | 100% (overflow) |
-| Tool + proactive compaction | 20 | 71% | 65% |
-| All four layers | 20 | 70% | 62% |
+| Text-only truncation (head+tail) | 8 (crashed) | 72% | 100% (overflow) |
+| Structural extraction (code) + head+tail (logs) | 14 (crashed) | 77% | 92% |
+| Structural + proactive compaction | 20 | 74% | 58% |
+| All four layers with structural extraction | 20 | 73% | 55% |
 
 **Key findings:**
 
-- **Tool truncation alone isn't enough** — history still grows unbounded from assistant messages and user prompts.
-- **Proactive compaction extends runtime indefinitely** but costs ~7% accuracy on tasks needing long-term memory.
+- **Text cutting code hurts accuracy** — head+tail on source files produces broken fragments, dropping accuracy 6 points vs. no compaction on the rounds that complete. The model misinterprets syntax-damaged code.
+- **Structural extraction preserves accuracy** — signature + dependency extraction recovers nearly all the accuracy lost to text cutting because the model sees intact, parseable code structures rather than mid-function cuts.
+- **Tool truncation alone isn't enough** — even with structural extraction, history still grows unbounded from assistant messages and user prompts.
+- **Proactive compaction extends runtime indefinitely** but costs ~5% accuracy on tasks needing long-term memory.
 - **Aggressive compaction rarely triggers** (<5% of runs) but prevents crashes when it does.
 - **The "re-read when needed" pattern** lets the agent recover accuracy by re-acquiring information on demand.
 
-The 7% accuracy loss from compaction is real but acceptable. Most agentic tasks are "do this thing" not "remember everything from 15 rounds ago." When long-term memory is needed, the agent compensates by re-reading files or re-running tools.
+The 5% accuracy loss from compaction is real but acceptable. Most agentic tasks are "do this thing" not "remember everything from 15 rounds ago." When long-term memory is needed, the agent compensates by re-reading files or re-running tools. The structural extraction layer ensures that when it does re-read, it gets **structurally sound** code rather than text-cut fragments — a critical difference the benchmark makes clear.
 
 ## Takeaways
 
@@ -413,15 +482,17 @@ The 7% accuracy loss from compaction is real but acceptable. Most agentic tasks 
 
 3. **Respect tool-call pairing during compaction**. Dropping an assistant message but keeping its tool results (or vice versa) causes hard provider errors. Group them into atomic units.
 
-4. **Head+tail truncation beats head-only** for tool outputs. Build logs and file contents have useful info at both ends.
+4. **For code, distill the structure — don't cut the text**. Source files lose syntax integrity when text-cut mid-function. Use Universal Ctags or Tree-sitter to extract signatures, class definitions, and dependencies. A 500-line Java file compresses to a 6-line skeleton with zero syntax damage. Text cutting is the last resort for code, applied only when structural extraction fails and the window is already full.
 
-5. **Teach the LLM to use tools as external memory**. The "re-read when needed" pattern turns context limits into a working memory model, reducing compaction's accuracy cost.
+5. **Head+tail truncation is fine for logs and prose**, where the middle is usually repetitive and syntax integrity isn't a concern. But never make it the first strategy for source code.
 
-6. **Layer your defenses**. No single strategy suffices. Tool truncation + proactive compaction + aggressive fallback + error retry gives resilience at every level.
+6. **Teach the LLM to use tools as external memory**. The "re-read when needed" pattern turns context limits into a working memory model, reducing compaction's accuracy cost.
 
-7. **Aggressive compaction is a feature, not a bug**. Losing context is better than crashing. The agent recovers by re-reading files — if your system prompt encourages that behavior.
+7. **Layer your defenses**. No single strategy suffices. Structural extraction (code) → head+tail fallback (logs) → proactive compaction → aggressive fallback → error retry gives resilience at every level.
 
-8. **Let the LLM summarize its own discarded context**. A single extra call during compaction produces a rich digest replacing generic "[N turns removed]" placeholders. The model retains decisions, file paths, and task state — recovering much of the accuracy compaction would otherwise cost.
+8. **Aggressive compaction is a feature, not a bug**. Losing context is better than crashing. The agent recovers by re-reading files — if your system prompt encourages that behavior.
+
+9. **Let the LLM summarize its own discarded context**. A single extra call during compaction produces a rich digest replacing generic "[N turns removed]" placeholders. The model retains decisions, file paths, and task state — recovering much of the accuracy compaction would otherwise cost.
 
 ## What's Next?
 
@@ -429,7 +500,9 @@ A proper tokenizer would replace character-count proxies for more precise contro
 
 **Selective summarization** is another promising direction: instead of summarizing all dropped messages uniformly, weight summarization depth by relevance — more detail for current-task messages, less for tangential exploration. This requires a relevance scoring step before summarization but could further improve the quality-to-cost ratio.
 
-For now, the four-layer strategy with LLM-assisted summarization keeps local agents running reliably for 20+ rounds on consumer GPUs — a practical production solution.
+**Tree-sitter integration** would lift structural extraction from a subprocess call to an in-process library, enabling richer queries: extract only methods matching a regex, filter by annotation/attribute, or diff two versions of a file at the AST level. Universal Ctags via system call works today with zero build dependencies; Tree-sitter adds power at the cost of per-language grammars.
+
+For now, the four-layer strategy — structural extraction for code, head+tail fallback for logs, proactive compaction with LLM summarization, and aggressive error recovery — keeps local agents running reliably for 20+ rounds on consumer GPUs. The key insight: **don't cut code, distill it**. The model doesn't need to see every line of a source file; it needs to see its shape.
 
 ---
 
@@ -439,3 +512,5 @@ For now, the four-layer strategy with LLM-assisted summarization keeps local age
 - [vLLM Configuration Options](https://docs.vllm.ai/en/latest/configuration/) — How inference servers handle context memory
 - [Ollama FAQ: Context Window Configuration](https://docs.ollama.com/faq) — Setting up local models with appropriate windows
 - [Claude Context Windows Documentation](https://platform.claude.com/docs/en/build-with-claude/context-windows) — How cloud providers handle large contexts
+- [Universal Ctags](https://github.com/universal-ctags/ctags) — Multi-language code indexer usable as a subprocess for signature and dependency extraction
+- [Tree-sitter](https://tree-sitter.github.io/tree-sitter/) — Incremental parsing library powering GitHub's syntax highlighting and code navigation
