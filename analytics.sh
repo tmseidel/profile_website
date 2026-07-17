@@ -207,6 +207,33 @@ awk -F'"' -v pat="\$BOT_PATTERN" '\$6 !~ pat && \$6 != "-" && \$6 != "" {print \
 echo ""
 
 # ═══════════════════════════════════════════════════════════
+# Show article-to-article navigation so recommendation cards can be evaluated.
+echo "── INTERNAL ARTICLE JOURNEYS ──────────────────────────────"
+echo "  (human visitors who opened one article from another)"
+awk -F'"' -v bpat="\$BOT_PATTERN" '
+  \$6 !~ bpat {
+    split(\$3, statusFields, " ");
+    status = statusFields[1];
+    split(\$2, request, " ");
+    path = request[2];
+    referrer = \$4;
+    if (status == 200 && path ~ /^\/articles\/.+\// &&
+        referrer ~ /remus-software\.org\/articles\//) {
+      sub(/^https?:\/\/[^/]+/, "", referrer);
+      sub(/[?#].*$/, "", referrer);
+      sub(/[?#].*$/, "", path);
+      sub(/\/+$/, "", referrer);
+      sub(/\/+$/, "", path);
+      if (referrer != path) print referrer "  →  " path;
+    }
+  }
+' "\$ALL_LOGS" | \
+  sort | uniq -c | sort -rn | head -15 | \
+  while read count from arrow to; do
+    printf "  %6d  %s %s %s\n" "\$count" "\$from" "\$arrow" "\$to"
+  done
+echo ""
+
 # Extract all external referrer URLs once, reuse for both views
 REF_URLS=\$(mktemp)
 awk -F'"' '\$4 != "-" && \$4 != "" && length(\$4) > 1' "\$ALL_LOGS" | \
@@ -268,7 +295,3 @@ REMOTE_SCRIPT
 echo "═══════════════════════════════════════════════════════════"
 echo " Report complete."
 echo "═══════════════════════════════════════════════════════════"
-
-
-
-

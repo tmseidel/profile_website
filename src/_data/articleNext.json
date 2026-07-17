@@ -1,0 +1,109 @@
+{
+  "kb_two_docker": {
+    "eyebrow": "Next: put your Docker setup to work",
+    "title": "I Built My Own AI Server — Here's What I Learned About Running Frontier Models at Home",
+    "description": "See how a local Docker-based stack, two GPUs, Ollama, vLLM, and Open WebUI came together to run frontier-class models at home.",
+    "url": "/articles/i-built-my-own-ai-server/?ref=wsl-docker-next",
+    "cta": "Continue to the AI server build",
+    "image": "/articles/i-built-my-own-ai-server/hardware_setup.jpg",
+    "imageAlt": "Home-built AI server with dual RTX 5060 Ti GPUs for local LLM inference"
+  },
+  "i-built-my-own-ai-server": {
+    "eyebrow": "Next: optimize the inference stack",
+    "title": "From Qwen3-32B to Qwen3.6-35B-A3B: Upgrading a Local Inference Stack on 2× RTX 5060 Ti",
+    "description": "A practical follow-up on getting more throughput and quality from the same local AI hardware.",
+    "url": "/articles/qwen3-to-qwen36-upgrade/?ref=ai-server-next",
+    "cta": "Read the inference upgrade"
+  },
+  "qwen3-to-qwen36-upgrade": {
+    "eyebrow": "Next: keep your agents reliable",
+    "title": "Why Your Local LLM Agent Fails at Round 4: The Hidden Context Window Crisis",
+    "description": "Learn how to keep a local agent effective once long conversations and tool output start filling its context window.",
+    "url": "/articles/context-window-hardening/?ref=qwen-upgrade-next",
+    "cta": "Explore context-window hardening"
+  },
+  "context-window-hardening": {
+    "eyebrow": "Next: build the agent around it",
+    "title": "Building an AI Agent for Code Generation: Lessons from 13 Iterations",
+    "description": "Put reliable context handling into practice with the architectural lessons behind a tool-using code-generation agent.",
+    "url": "/articles/how-to-develop-an-ai-agent/?ref=context-hardening-next",
+    "cta": "Read the agent-building lessons"
+  },
+  "how-to-develop-an-ai-agent": {
+    "eyebrow": "Next: scale agentic AI across a team",
+    "title": "Standardizing Agentic AI at Scale: Why Remote MCP Servers Are the Missing Layer",
+    "description": "Move from one useful agent to consistent, governable AI capabilities across an organization.",
+    "url": "/articles/remote-mcp-standardization/?ref=agent-development-next",
+    "cta": "Explore remote MCP standardization"
+  },
+  "remote-mcp-standardization": {
+    "eyebrow": "Next: make the team experience consistent",
+    "title": "We Gave Every Team Member an AI Agent — Here's What It Took to Make Them All Think Alike",
+    "description": "A practical companion piece on sharing AI configuration, models, skills, and behavior with a team.",
+    "url": "/articles/howto-share-your-ai-experience/?ref=remote-mcp-next",
+    "cta": "Read the team configuration story"
+  },
+  "howto-share-your-ai-experience": {
+    "eyebrow": "Next: look at the bigger control question",
+    "title": "Sovereign AI Is Loud — But The Real Issue Is Sovereign IT",
+    "description": "Configuration consistency is one part of a broader question: who controls the infrastructure, data, and technical choices?",
+    "url": "/articles/regarding-sovereign-it/?ref=team-ai-next",
+    "cta": "Read about sovereign IT"
+  },
+  "regarding-sovereign-it": {
+    "eyebrow": "Next: apply architectural control in practice",
+    "title": "Migrating a Monolith to Microservices: A Practical Guide",
+    "description": "A hands-on guide to regaining flexibility in an existing system through deliberate, incremental architecture change.",
+    "url": "/articles/monolith-to-microservices/?ref=sovereign-it-next",
+    "cta": "Read the migration guide"
+  },
+  "monolith-to-microservices": {
+    "eyebrow": "Next: improve how the new system ships",
+    "title": "AI-Git-Bot vs Copilot, GitLab Duo, Qodo and OpenHands — Which Problem Are You Actually Trying To Solve?",
+    "description": "Once architecture unblocks delivery, choose the AI tooling that addresses your team's actual engineering bottleneck.",
+    "url": "/articles/ai-git-bot-vs-copilot-gitlab-duo-qodo-openhands/?ref=microservices-next",
+    "cta": "Compare AI engineering tools"
+  },
+  "ai-git-bot-vs-copilot-gitlab-duo-qodo-openhands": {
+    "eyebrow": "Next: see the workflow in action",
+    "title": "Meet AI-Git-Bot 1.7 — the teammate that reviews, tests and ships your PRs",
+    "description": "See what AI-Git-Bot looks like in a real delivery workflow, from review and testing to preview deployments.",
+    "url": "/articles/meet-ai-git-bot-the-teammate-that-review-ships-test-prs/?ref=ai-tools-comparison-next",
+    "cta": "Meet AI-Git-Bot"
+  },
+  "meet-ai-git-bot-the-teammate-that-review-ships-test-prs": {
+    "eyebrow": "Next: raise the quality bar",
+    "title": "Improving Software Quality with Reviewer Personas in AI-Git-Bot",
+    "description": "Go deeper on the specialized review personas that help catch quality issues before they reach production.",
+    "url": "/articles/improve-software-quality-with-reviewer-personas/?ref=ai-git-bot-next",
+    "cta": "Explore reviewer personas"
+  },
+  "improve-software-quality-with-reviewer-personas": {
+    "eyebrow": "Next: standardize the wider AI platform",
+    "title": "Standardizing Agentic AI at Scale: Why Remote MCP Servers Are the Missing Layer",
+    "description": "The same drive for consistent reviews applies to the tools, data, and governance behind every AI-assisted workflow.",
+    "url": "/articles/remote-mcp-standardization/?ref=reviewer-personas-next",
+    "cta": "Read about standardizing AI"
+  },
+  "rest-explorer-1-0-released": {
+    "eyebrow": "Next: rethink the backup stack",
+    "title": "From Legacy to Lean: Rethinking Your Backup Strategy",
+    "description": "The story behind simplifying a costly backup platform into a lean, maintainable restic-based setup.",
+    "url": "/articles/replacing-veeam-with-restic/?ref=restic-explorer-next",
+    "cta": "Read the backup strategy"
+  },
+  "replacing-veeam-with-restic": {
+    "eyebrow": "Next: another self-hosting decision",
+    "title": "Evaluating Self-Hosted AI Services: A Translation Service Case Study",
+    "description": "A practical look at replacing another commercial service with an open-source, self-hosted alternative.",
+    "url": "/articles/self-hosted-ai-translation-service/?ref=restic-strategy-next",
+    "cta": "Read the translation case study"
+  },
+  "self-hosted-ai-translation-service": {
+    "eyebrow": "Next: build the hardware foundation",
+    "title": "I Built My Own AI Server — Here's What I Learned About Running Frontier Models at Home",
+    "description": "Take the next step from self-hosted AI software to the hardware and serving stack behind a local model platform.",
+    "url": "/articles/i-built-my-own-ai-server/?ref=translation-service-next",
+    "cta": "Read the AI server build"
+  }
+}
