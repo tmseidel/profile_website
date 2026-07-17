@@ -207,6 +207,35 @@ awk -F'"' -v pat="\$BOT_PATTERN" '\$6 !~ pat && \$6 != "-" && \$6 != "" {print \
 echo ""
 
 # ═══════════════════════════════════════════════════════════
+echo "── NEXT-ARTICLE CROSS-REFERENCE CLICKS ───────────────────"
+echo "  (human visits through the recommended next-read boxes)"
+awk -F'"' -v bpat="\$BOT_PATTERN" '
+  \$6 !~ bpat {
+    split(\$3, statusFields, " ");
+    status = statusFields[1];
+    split(\$2, request, " ");
+    path = request[2];
+    referrer = \$4;
+    if (status == 200 && path ~ /[?&]ref=[^&]*-next([&]|$)/ &&
+        referrer ~ /remus-software\.org\/articles\//) {
+      sub(/^https?:\/\/[^/]+/, "", referrer);
+      sub(/[?#].*$/, "", referrer);
+      sub(/\/+$/, "", referrer);
+      destination = path;
+      sub(/[?#].*$/, "", destination);
+      sub(/\/+$/, "", destination);
+      print referrer "  →  " destination;
+    }
+  }
+' "\$ALL_LOGS" | \
+  sort | uniq -c | sort -rn | head -15 | \
+  while read count from arrow to; do
+    bar=\$(printf '%*s' \$(( count * 4 )) '' | tr ' ' '#')
+    printf "  %6d  %s %s %s  %s\n" "\$count" "\$from" "\$arrow" "\$to" "\$bar"
+  done
+echo ""
+
+# ═══════════════════════════════════════════════════════════
 # Show article-to-article navigation so recommendation cards can be evaluated.
 echo "── INTERNAL ARTICLE JOURNEYS ──────────────────────────────"
 echo "  (human visitors who opened one article from another)"

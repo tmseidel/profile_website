@@ -16,22 +16,27 @@ layout: base.njk
       <h1>{{ title }}</h1>
       {% if description %}<p class="article-lead">{{ description }}</p>{% endif %}
     </header>
+    {% if recommendedArticle %}
+    <aside class="article-next article-next--top" aria-label="Recommended next article">
+      <p class="article-next-label">Recommended next read</p>
+      <div>
+        <a href="{{ recommendedArticle.url }}" class="article-next-title">{{ recommendedArticle.title }}</a>
+        <p class="article-next-description">{{ recommendedArticle.description }}</p>
+        <a href="{{ recommendedArticle.url }}" class="article-next-link">{{ recommendedArticle.cta }} <span aria-hidden="true">→</span></a>
+      </div>
+    </aside>
+    {% endif %}
     <div class="article-body">
       {{ content | safe }}
     </div>
     {% if recommendedArticle %}
-    <aside class="article-next{% if recommendedArticle.image %} article-next--with-image{% endif %}" aria-labelledby="next-article-title">
-      <div class="article-next-content">
-        <p class="article-next-eyebrow">{{ recommendedArticle.eyebrow }}</p>
-        <h2 id="next-article-title"><a href="{{ recommendedArticle.url }}">{{ recommendedArticle.title }}</a></h2>
-        <p>{{ recommendedArticle.description }}</p>
+    <aside class="article-next article-next--bottom" aria-label="Recommended next article">
+      <p class="article-next-label">Continue exploring</p>
+      <div>
+        <a href="{{ recommendedArticle.url }}" class="article-next-title">{{ recommendedArticle.title }}</a>
+        <p class="article-next-description">{{ recommendedArticle.description }}</p>
         <a href="{{ recommendedArticle.url }}" class="article-next-link">{{ recommendedArticle.cta }} <span aria-hidden="true">→</span></a>
       </div>
-      {% if recommendedArticle.image %}
-      <a href="{{ recommendedArticle.url }}" class="article-next-image" tabindex="-1" aria-hidden="true">
-        <img src="{{ recommendedArticle.image }}" alt="{{ recommendedArticle.imageAlt }}" />
-      </a>
-      {% endif %}
     </aside>
     {% endif %}
     <footer class="article-footer">
