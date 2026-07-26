@@ -72,10 +72,17 @@
     "cta": "Meet AI-Git-Bot"
   },
   "meet-ai-git-bot-the-teammate-that-review-ships-test-prs": {
+    "eyebrow": "Next: enterprise-ready features",
+    "title": "AI-Git-Bot 1.18 — Audit trails, SSO and the road into your organization",
+    "description": "The features that let an AI teammate live inside a real company: OAuth2/OIDC login, tamper-evident audit trails, outgoing webhooks, Prometheus metrics, and deterministic review gates.",
+    "url": "/articles/ai-git-bot-1-18-audit-trails-sso/?ref=ai-git-bot-next",
+    "cta": "Read about AI-Git-Bot 1.18"
+  },
+  "ai-git-bot-1-18-audit-trails-sso": {
     "eyebrow": "Next: raise the quality bar",
     "title": "Improving Software Quality with Reviewer Personas in AI-Git-Bot",
     "description": "Go deeper on the specialized review personas that help catch quality issues before they reach production.",
-    "url": "/articles/improve-software-quality-with-reviewer-personas/?ref=ai-git-bot-next",
+    "url": "/articles/improve-software-quality-with-reviewer-personas/?ref=audit-trails-next",
     "cta": "Explore reviewer personas"
   },
   "improve-software-quality-with-reviewer-personas": {
