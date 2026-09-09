@@ -1,6 +1,6 @@
 ---
 layout: base.njk
-title: Java Freelancer & Cloud-Native AI Specialist
+title: Java Freelancer & Cloud-Native AI Expert
 description: Tom Seidel is a freelance Java consultant with 20+ years of experience in cloud-native architectures, microservices, DevOps, and AI-powered agentic systems. Available for freelance and contract work.
 ---
 
@@ -9,7 +9,7 @@ description: Tom Seidel is a freelance Java consultant with 20+ years of experie
   <div class="container">
     <div class="hero-content">
       <span class="hero-badge">👨‍💻 Available for freelance &amp; contract work</span>
-      <h1>Java Freelancer &amp;<br/>Cloud-Native AI Specialist</h1>
+      <h1>Java Freelancer &amp;<br/>Cloud-Native AI Expert</h1>
       <p class="hero-subtitle">
         20+ years of experience delivering robust, scalable software — from enterprise desktop to cloud-native microservices and AI-powered agentic systems.
       </p>

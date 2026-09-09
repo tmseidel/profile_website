@@ -18,6 +18,7 @@ Tom Seidel is a freelance consultant specializing in Java development, cloud-nat
 - [Atom Feed](https://remus-software.org/feed.xml): Article feed in Atom format
 
 ## Articles
+- [The Low-Code Automation Hype Isn't Fading in 2026. That's the Problem.](https://remus-software.org/articles/low-code-hype-with-ai/): The low-code automation market is at its all-time peak, but the agentic AI promise underneath it is entering its trough of disillusionment. Why I still think code-first is the winning play in the AI era.
 
 - [Upgrading the Local LLM Stack: From Qwen3.6-35B-A3B to Qwen3.8-27B](https://remus-software.org/articles/qwen3.6-to-qwen3.8-upgrade/): How a model generation jump changed our Ansible-managed vLLM deployment on 2× RTX 5060 Ti — trading a fast 3B-active MoE for a dense 27B model, quadrupling the served context to the full 262K, and what it means for agent harnesses like Hermes.
 - [AI-Git-Bot 1.18 — Audit trails, SSO and the road into your organization](https://remus-software.org/articles/ai-git-bot-1-18-audit-trails-sso/): AI-Git-Bot 1.18 is the release where the bot grows up: OAuth2/OIDC login, a tamper-evident audit trail, outgoing webhooks for your SIEM, Prometheus metrics, deterministic review gates — and a one-command docker run to try it all. Not new AI tricks, but the features that let an AI teammate live inside a real company.

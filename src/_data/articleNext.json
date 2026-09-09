@@ -1,4 +1,11 @@
 {
+  "low-code-hype-with-ai": {
+    "eyebrow": "Next: who really controls the platform",
+    "title": "Sovereign AI Is Loud — But The Real Issue Is Sovereign IT",
+    "description": "The low-code article ends on a platform roadmap deciding what you can do. The broader question is who controls the infrastructure, data, and technical choices.",
+    "url": "/articles/regarding-sovereign-it/?ref=low-code-hype-next",
+    "cta": "Read about sovereign IT"
+  },
   "kb_two_docker": {
     "eyebrow": "Next: put your Docker setup to work",
     "title": "I Built My Own AI Server — Here's What I Learned About Running Frontier Models at Home",
