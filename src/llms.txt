@@ -1,4 +1,4 @@
-# Tom Seidel – Java Freelancer & Cloud-Native AI Specialist
+# Tom Seidel – Java Freelancer & Cloud-Native AI Expert
 
 > Freelance Java consultant with 20+ years of experience in cloud-native architectures, microservices, DevOps, and AI-powered agentic systems. Based in Germany, remote-first.
 
@@ -18,6 +18,8 @@ Tom Seidel is a freelance consultant specializing in Java development, cloud-nat
 - [Atom Feed](https://remus-software.org/feed.xml): Article feed in Atom format
 
 ## Articles
+- [Regarding the Job Market: Why 2026 Feels Like a Crisis — and Why the Profession Isn't Dying](https://remus-software.org/articles/ai-job-market/): The 2026 job market feels like a crisis, but the data says otherwise: demand for software is intact, only the shape of the roles is changing. What the numbers actually show — and why the doomsday narrative is a product of filter bubbles.
+
 - [The Low-Code Automation Hype Isn't Fading in 2026. That's the Problem.](https://remus-software.org/articles/low-code-hype-with-ai/): The low-code automation market is at its all-time peak, but the agentic AI promise underneath it is entering its trough of disillusionment. Why I still think code-first is the winning play in the AI era.
 
 - [Upgrading the Local LLM Stack: From Qwen3.6-35B-A3B to Qwen3.8-27B](https://remus-software.org/articles/qwen3.6-to-qwen3.8-upgrade/): How a model generation jump changed our Ansible-managed vLLM deployment on 2× RTX 5060 Ti — trading a fast 3B-active MoE for a dense 27B model, quadrupling the served context to the full 262K, and what it means for agent harnesses like Hermes.
