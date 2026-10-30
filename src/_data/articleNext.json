@@ -133,5 +133,26 @@
     "description": "Take the next step from self-hosted AI software to the hardware and serving stack behind a local model platform.",
     "url": "/articles/i-built-my-own-ai-server/?ref=translation-service-next",
     "cta": "Read the AI server build"
+  },
+  "jev-agentic-integration": {
+    "eyebrow": "Next: build the architecture the gates sit in",
+    "title": "Building an AI Agent for Code Generation: Lessons from 13 Iterations",
+    "description": "If the design is the product, this is what building it looks like: the generic loop, schema-validated plans, and provider-native tool calls behind a working agent.",
+    "url": "/articles/how-to-develop-an-ai-agent/?ref=jev-agentic-integration-next",
+    "cta": "Read the agent-building lessons"
+  },
+  "llm-agent-and-scripting": {
+    "eyebrow": "Next: keep the agent's context from filling up",
+    "title": "Why Your Local LLM Agent Fails at Round 4: The Hidden Context Window Crisis",
+    "description": "If the loop is what burns your context, this is the other half of the fix: a four-layer defence that keeps a local agent running past the round where it usually falls over.",
+    "url": "/articles/context-window-hardening/?ref=llm-agent-and-scripting-next",
+    "cta": "Explore context-window hardening"
+  },
+  "why-every-ai-agent-should-use-git": {
+    "eyebrow": "Next: put the shared context in one place",
+    "title": "We Gave Every Team Member an AI Agent — Here's What It Took to Make Them All Think Alike",
+    "description": "If git is where the agent's knowledge should live, this is what it looks like in a team: one repository of profiles and skills every harness reads, instead of a config trapped in someone's web UI.",
+    "url": "/articles/howto-share-your-ai-experience/?ref=git-memory-next",
+    "cta": "Read about shared agent configuration"
   }
 }

@@ -18,6 +18,12 @@ Tom Seidel is a freelance consultant specializing in Java development, cloud-nat
 - [Atom Feed](https://remus-software.org/feed.xml): Article feed in Atom format
 
 ## Articles
+- [Your Agent's Memory Is Vendor Lock-In. Put It in Git.](https://remus-software.org/articles/why-every-ai-agent-should-use-git/): Every harness ships its own memory format and none can read the others', so the knowledge an agent accumulates dies with the tool. Why a git repository is the one substrate every harness writes, every human reads, and that also records how the belief changed.
+
+- [Your Agent Is Paying an LLM to Run a For-Loop](https://remus-software.org/articles/llm-agent-and-scripting/): Most agent loops make the model the bus between every tool call, paying tokens, context and latency for bookkeeping a script could do. How one execute-code tool moves the loop out of the model — and the security bill that decides whether the saving survives production.
+
+- [Jev Is Not a Faster LLM — It Is a Bill for the Architecture You Skipped](https://remus-software.org/articles/jev-agentic-integration/): Jev answers in milliseconds for almost nothing per call — but it is not a faster LLM. It is a parallel sampler that relocates the reasoning into the pipeline you have to build, own and test, turning hallucination into silent miscalibration.
+
 - [Regarding the Job Market: Why 2026 Feels Like a Crisis — and Why the Profession Isn't Dying](https://remus-software.org/articles/ai-job-market/): The 2026 job market feels like a crisis, but the data says otherwise: demand for software is intact, only the shape of the roles is changing. What the numbers actually show — and why the doomsday narrative is a product of filter bubbles.
 
 - [The Low-Code Automation Hype Isn't Fading in 2026. That's the Problem.](https://remus-software.org/articles/low-code-hype-with-ai/): The low-code automation market is at its all-time peak, but the agentic AI promise underneath it is entering its trough of disillusionment. Why I still think code-first is the winning play in the AI era.
